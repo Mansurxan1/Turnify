@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter_18pt-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter_18pt-Medium.ttf') format('truetype'),
+       url('./assets/fonts/Inter_18pt-SemiBold.ttf') format('truetype'),
+       url('./assets/fonts/Inter_18pt-Bold.ttf') format('truetype'),
+       url('./assets/fonts/Inter_18pt-Light.ttf') format('truetype');
+  font-weight: 300 700;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('./assets/fonts/Manrope-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Manrope';
+  src: url('./assets/fonts/Manrope-Medium.ttf') format('truetype'),
+       url('./assets/fonts/Manrope-SemiBold.ttf') format('truetype'),
+       url('./assets/fonts/Manrope-Bold.ttf') format('truetype');
+  font-weight: 500 700;
+}
+
+body {
+  font-family: 'Inter';
+}
