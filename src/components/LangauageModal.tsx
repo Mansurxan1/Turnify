@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useRef } from "react"
 import type React from "react"
 import { useTranslation } from "react-i18next"
@@ -65,7 +63,7 @@ const LanguageModal = () => {
 
     return () => {
       window.visualViewport?.removeEventListener("resize", detectKeyboard)
-      window.addEventListener("resize", detectKeyboard)
+      window.removeEventListener("resize", detectKeyboard)
     }
   }, [])
 
@@ -159,7 +157,7 @@ const LanguageModal = () => {
 
   return (
     <>
-      <div className={`flex flex-col items-center justify-center min-h-screen ${bgColor} px-8 pb-20`}>
+      <div className={`flex pt-5 flex-col items-center justify-center min-h-screen ${bgColor} px-8 pb-20`}>
         <div className="w-full absolute pt-2 mx-auto max-w-[450px] top-10 flex justify-start">
           <div style={progressBarStyle}></div>
         </div>
@@ -184,7 +182,7 @@ const LanguageModal = () => {
           <button
             onClick={() => selectedLang && setShowDetailsModal(true)}
             disabled={!selectedLang}
-            className={`max-w-[385px] mx-auto p-3 rounded-xl text-white font-semibold transition-colors ${buttonBackground(
+            className={`max-w-[385px] mx-auto mx-auto p-3 rounded-xl text-white font-semibold transition-colors ${buttonBackground(
               !!selectedLang,
             )} ${!selectedLang && "cursor-not-allowed"} ${buttonPositionClass}`}
           >
@@ -194,7 +192,7 @@ const LanguageModal = () => {
       </div>
 
       {showDetailsModal && (
-        <div className="fixed inset-0 pt-3 flex items-center justify-center z-50">
+        <div className="fixed pt-5 inset-0 flex items-center justify-center z-50">
           <div
             className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${bgColor} justify-start overflow-y-auto`}
           >
@@ -208,7 +206,7 @@ const LanguageModal = () => {
               <div style={progressBarStyle} className="mt-2"></div>
             </div>
             <div className="px-8 pb-24">
-              <h2 className={`mt-24 text-xl font-bold ${textColor} leading-tight`}>{t("enter_details")}</h2>
+              <h2 className={`mt-5 text-xl font-bold ${textColor} leading-tight`}>{t("enter_details")}</h2>
               <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("name_instructions")}</p>
               <div className="flex flex-col">
                 <input
@@ -251,7 +249,7 @@ const LanguageModal = () => {
       )}
 
       {showTimeZoneModal && (
-        <div className="fixed inset-0 pt-3 flex items-center justify-center z-50">
+        <div className="fixed pt-5 inset-0 flex items-center justify-center z-50">
           <div
             className={`h-screen max-w-[450px] w-full mx-auto flex flex-col items-center justify-start ${bgColor} overflow-y-auto`}
           >
@@ -265,14 +263,22 @@ const LanguageModal = () => {
               <div style={progressBarStyle} className="mt-2"></div>
             </div>
             <div className="px-8 pb-24 w-full">
-              <h2 className={`mt-24 text-[24px] font-bold ${textColor} leading-tight`}>{t("select_timezone")}</h2>
+              <h2 className={`mt-5 text-[24px] font-bold ${textColor} leading-tight`}>{t("select_timezone")}</h2>
               <p className={`mt-4 text-[#768C9E] text-[14px] leading-relaxed`}>{t("timezone_instructions")}</p>
               <div className="w-full max-w-[420px] mt-6 relative" ref={dropdownRef}>
                 <div className="relative">
                   <input
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    onFocus={() => setIsDropdownOpen(true)}
+                    onFocus={() => {
+                      setIsDropdownOpen(true)
+                      setTimeout(() => {
+                        const element = document.activeElement
+                        if (element) {
+                          element.scrollIntoView({ behavior: "smooth", block: "center" })
+                        }
+                      }, 300)
+                    }}
                     placeholder={t("country_or_city")}
                     className={`w-full p-3 ${buttonBg} rounded-lg text-[#5EB5F7] text-base focus:outline-none pr-10`}
                   />
@@ -284,7 +290,7 @@ const LanguageModal = () => {
                 </div>
                 {isDropdownOpen && (
                   <div
-                    className={`absolute w-full mt-1 ${buttonBg} rounded-lg max-h-[200px] overflow-y-auto z-10 ${dropdownShadow}`}
+                    className={`${isKeyboardVisible ? "absolute bottom-full mb-1" : "absolute top-full mt-1"} w-full ${buttonBg} rounded-lg max-h-[200px] overflow-y-auto z-20 ${dropdownShadow}`}
                   >
                     {filteredCountries.length > 0 ? (
                       filteredCountries.map((country) => (
