@@ -138,7 +138,7 @@ const LanguageModal = () => {
 
   return (
     <>
-      <div className={`flex flex-col items-center justify-center h-screen ${bgColor} px-4`}>
+      <div className={`flex flex-col items-center justify-center h-screen ${bgColor} px-8`}>
         <div className="w-full absolute pt-2 mx-auto max-w-[450px] top-10 flex justify-start">
           <div style={progressBarStyle}></div>
         </div>
@@ -165,7 +165,7 @@ const LanguageModal = () => {
           <button
             onClick={() => selectedLang && setShowDetailsModal(true)}
             disabled={!selectedLang}
-            className={`fixed bottom-8 max-w-[390px] mx-auto left-4 right-4 p-3 rounded-xl text-white font-semibold transition-colors ${
+            className={`fixed bottom-8 max-w-[385px] mx-auto left-7 right-7 p-3 rounded-xl text-white font-semibold transition-colors ${
               buttonBackground(!!selectedLang)
             } ${!selectedLang && "cursor-not-allowed"}`}
           >
@@ -226,7 +226,7 @@ const LanguageModal = () => {
                   }
                 }}
                 disabled={!name.trim() || !username.trim() || username.startsWith("-") || username.endsWith("-")}
-                className={`fixed bottom-8 mx-auto left-4 right-4 max-w-[390px] p-3 rounded-xl text-white font-semibold transition-colors ${
+                className={`fixed bottom-8 mx-auto left-7 right-7 max-w-[385px] p-3 rounded-xl text-white font-semibold transition-colors ${
                   buttonBackground(!!(name.trim() && username.trim() && !username.startsWith("-") && !username.endsWith("-")))
                 } ${(!name.trim() || !username.trim() || username.startsWith("-") || username.endsWith("-")) ? "cursor-not-allowed" : ""}`}
               >
@@ -304,7 +304,7 @@ const LanguageModal = () => {
                   }
                 }}
                 disabled={!selectedCountry}
-                className={`fixed left-5 right-5 bottom-8 mx-auto max-w-[390px] p-3 rounded-xl text-white font-semibold transition-colors ${
+                className={`fixed left-7 right-7 bottom-8 mx-auto max-w-[385px] p-3 rounded-xl text-white font-semibold transition-colors ${
                   buttonBackground(!!selectedCountry)
                 } ${!selectedCountry ? "cursor-not-allowed" : ""}`}
               >
