@@ -39,7 +39,7 @@ const Loader: React.FC = () => {
     <div className={`fixed inset-0 min-h-screen flex justify-center ${overlayBg} z-50`}>
       <div className={`flex max-w-[450px] w-full flex-col items-center justify-center ${bgColor}`}>
         {showText ? (
-          <h3 className={`text-xl font-bold ${textColor}`}>
+          <h3 className={`text-lg px-2 font-bold ${textColor}`}>
             {t("slogan")}
           </h3>
         ) : (
@@ -47,10 +47,10 @@ const Loader: React.FC = () => {
         )}
       </div>
 
-      <div className={`fixed bottom-8 px-4 ${footerTextColor} text-sm w-full text-center max-w-[390px]`}>
+      <div className={`fixed bottom-8 px-4 ${footerTextColor} text-sm w-full text-center`}>
         {t("copyright")} <br />
-        <div className="flex mt-1 justify-between">
-          <Link to={"/terms"} className="text-blue-500 pr-2 w-1/2">{t("terms")}</Link> |{" "}
+        <div className="flex mt-1 justify-center max-w-[400px] mx-auto">
+          <Link to={"/terms"} className="text-blue-500 pr-3 w-1/2">{t("terms")}</Link> |{" "}
           <Link to={"/privacy"} className="text-blue-500 w-1/2">{t("privacy")}</Link>
         </div>
       </div>
