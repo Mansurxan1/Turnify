@@ -7,18 +7,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 
 const Loader: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation(); 
   const [showText, setShowText] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const theme = useSelector((state: RootState) => state.telegram.theme);
-
-  useEffect(() => {
-    const handleLanguageChange = () => {};
-    i18n.on("languageChanged", handleLanguageChange);
-    return () => {
-      i18n.off("languageChanged", handleLanguageChange);
-    };
-  }, [i18n]);
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -55,10 +47,10 @@ const Loader: React.FC = () => {
         )}
       </div>
 
-      <div className={`fixed bottom-8 ${footerTextColor} text-sm text-center max-w-[390px]`}>
+      <div className={`fixed bottom-8 px-4 ${footerTextColor} text-sm w-full text-center max-w-[390px]`}>
         {t("copyright")} <br />
-        <div className="flex px-4 justify-between">
-          <Link to={"/terms"} className="text-blue-500 w-1/2">{t("terms")}</Link> |{" "}
+        <div className="flex mt-1 justify-between">
+          <Link to={"/terms"} className="text-blue-500 pr-2 w-1/2">{t("terms")}</Link> |{" "}
           <Link to={"/privacy"} className="text-blue-500 w-1/2">{t("privacy")}</Link>
         </div>
       </div>

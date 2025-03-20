@@ -18,7 +18,7 @@ const countries = [
   "Australia",
 ]
 
-const LanguageModal = () => {
+const LoginLanguageModal = () => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [selectedLang, setSelectedLang] = useState<string | null>(localStorage.getItem("language"))
@@ -347,5 +347,5 @@ const LanguageModal = () => {
   )
 }
 
-export default LanguageModal
+export default LoginLanguageModal
 

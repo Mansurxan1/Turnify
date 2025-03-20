@@ -6,7 +6,7 @@ import Home from "../pages/Home";
 import Terms from "../components/Terms";
 import Loader from "../components/Loader";
 import Privacy from "../components/Privacy";
-import LangauageModal from "../components/LangauageModal";
+import LoginLanguageModal from "../components/LangauageModal";
 
 const RouterContent: React.FC = () => {
   const location = useLocation(); 
@@ -31,7 +31,7 @@ const RouterContent: React.FC = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy/>} />
-        <Route path="/language" element={<LangauageModal />} />
+        <Route path="/language" element={<LoginLanguageModal />} />
       </Routes>
     </>
   );
