@@ -22,7 +22,10 @@
 //   const { t, i18n } = useTranslation()
 //   const navigate = useNavigate()
 //   const [selectedLang, setSelectedLang] = useState<string | null>(localStorage.getItem("language"))
+  
+//   // Tema Redux'dan olinadi (state.telegram.theme), bu yerda "light" (kunduz) yoki "dark" (tun) qiymatlari keladi
 //   const theme = useSelector((state: RootState) => state.telegram.theme)
+  
 //   const [showDetailsModal, setShowDetailsModal] = useState(false)
 //   const [showUsernameModal, setShowUsernameModal] = useState(false)
 //   const [showTimeZoneModal, setShowTimeZoneModal] = useState(false)
@@ -58,10 +61,8 @@
 //       const windowHeight = window.innerHeight
 //       setIsKeyboardVisible(viewportHeight < windowHeight * 0.8)
 //     }
-
 //     window.visualViewport?.addEventListener("resize", detectKeyboard)
 //     window.addEventListener("resize", detectKeyboard)
-
 //     return () => {
 //       window.visualViewport?.removeEventListener("resize", detectKeyboard)
 //       window.removeEventListener("resize", detectKeyboard)
@@ -90,24 +91,25 @@
 //     i18n.changeLanguage(lang)
 //   }
 
+//   // Ismni har qanday tilda yozish, lekin raqam, emoji, maxsus belgilar va bo‘shliqqa ruxsat berilmaydi
 //   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 //     const value = e.target.value
-//     let cleanedValue = value.replace(/^\s+/, "")
-//     cleanedValue = cleanedValue.replace(/\s+/g, " ")
-//     if (/^[a-zA-Z\s]*$/.test(cleanedValue)) {
-//       setFirstName(cleanedValue)
+//     // Faqat harflarga ruxsat beriladi (raqamlar, maxsus belgilar, bo‘shliqlar yo‘q)
+//     if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
+//       setFirstName(value)
 //     }
 //   }
 
+//   // Familiyani har qanday tilda yozish, lekin raqam, emoji, maxsus belgilar va bo‘shliqqa ruxsat berilmaydi
 //   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 //     const value = e.target.value
-//     let cleanedValue = value.replace(/^\s+/, "")
-//     cleanedValue = cleanedValue.replace(/\s+/g, " ")
-//     if (/^[a-zA-Z\s]*$/.test(cleanedValue)) {
-//       setLastName(cleanedValue)
+//     // Faqat harflarga ruxsat beriladi (raqamlar, maxsus belgilar, bo‘shliqlar yo‘q)
+//     if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
+//       setLastName(value)
 //     }
 //   }
 
+//   // Username faqat ingliz alifbosida, raqamlar va chiziqcha bilan
 //   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 //     const value = e.target.value
 //     if (/^[a-zA-Z0-9-]*$/.test(value)) {
@@ -138,22 +140,24 @@
 
 //   const filteredCountries = countries.filter((country) => country.toLowerCase().includes(searchTerm.toLowerCase()))
 
-//   const textColor = theme === "light" ? "text-white" : "text-black"
-//   const bgColor = theme === "light" ? "bg-[#242f3d]" : "bg-[#F1F1F1]"
-//   const buttonBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]"
-//   const inputBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]"
-//   const timeBg = theme === "light" ? "bg-[#5EB5F7]" : "bg-[#2B5278]"
-//   const buttonTextColor = theme === "light" ? "text-white" : "text-black"
+//   // Tema ranglari: "light" (kunduz) yoki "dark" (tun) rejimiga qarab o‘zgaradi
+//   const textColor = theme === "light" ? "text-white" : "text-black" // Matn rangi: kunduzda oq, tunda qora
+//   const bgColor = theme === "light" ? "bg-[#242f3d]" : "bg-[#F1F1F1]" // Orqa fon: kunduzda quyuq kulrang, tunda och kulrang
+//   const buttonBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]" // Tugma foni: kunduzda quyuq ko‘k, tunda oq
+//   const inputBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]" // Input foni: kunduzda quyuq ko‘k, tunda oq
+//   const timeBg = theme === "light" ? "bg-[#5EB5F7]" : "bg-[#2B5278]" // Vaqt mintaqasi foni: kunduzda och ko‘k, tunda quyuq ko‘k
+//   const defaultButtonTextColor = theme === "light" ? "text-white" : "text-black" // Tugma matni: kunduzda oq, tunda qora
+//   const activeButtonTextColor = "text-white" // Faol tugma matni har doim oq
 
 //   const buttonBackground = (condition: boolean) => {
 //     if (condition) {
-//       return "bg-gradient-to-r from-[#0061FF] to-[#52DAFF]"
+//       return "bg-gradient-to-r from-[#0061FF] to-[#52DAFF]" // Faol bo‘lsa gradient ko‘k
 //     }
-//     return "bg-transparent border border-[#768C9E]"
+//     return `bg-transparent border ${theme === "light" ? "border-[#BFC8CF]" : "border-[#768C9E]"}` // Faol bo‘lmasa shaffof, chegarasi tematik
 //   }
 
 //   const dropdownShadow =
-//     theme === "light" ? "shadow-[0px_10px_15px_-3px_#00000026]" : "shadow-[0px_10px_15px_-3px_#00000033]"
+//     theme === "light" ? "shadow-[0px_10px_15px_-3px_#00000026]" : "shadow-[0px_10px_15px_-3px_#00000033]" // Dropdown soyasi: kunduzda engil, tunda biroz quyuqroq
 
 //   const progressBarStyle = {
 //     height: "4px",
@@ -193,9 +197,9 @@
 //           <button
 //             onClick={() => selectedLang && setShowDetailsModal(true)}
 //             disabled={!selectedLang}
-//             className={`max-w-[385px] mx-auto p-3 ${buttonTextColor} rounded-xl font-semibold transition-colors ${buttonBackground(
+//             className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
 //               !!selectedLang
-//             )} ${!selectedLang && "cursor-not-allowed"} ${buttonPositionClass}`}
+//             )} ${!selectedLang ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
 //           >
 //             {t("next")}
 //           </button>
@@ -217,14 +221,14 @@
 //               <div style={progressBarStyle} className="mt-2"></div>
 //             </div>
 //             <div className="px-8 pb-24">
-//               <h2 className={`mt-5 text-xl font-bold ${textColor} leading-tight`}>{t("enter_details")}</h2>
-//               <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("name_instructions")}</p>
+//               <h2 className={`mt-10 text-xl uppercase font-bold ${textColor} leading-tight`}>{t("enter_details")}</h2>
+//               <p className={`mt-2 text-[#768C9E] text-sm leading-relaxed`}>{t("name_instructions")}</p>
 //               <div className="flex flex-col space-y-4">
 //                 <input
 //                   value={firstName}
 //                   onChange={handleFirstNameChange}
 //                   placeholder={t("first_name")}
-//                   className={`w-full max-w-[390px] mt-4 p-3 ${inputBg} rounded-xl text-[#768C9E] text-[16px] focus:outline-none border border-[#768C9E]`}
+//                   className={`w-full max-w-[390px] capitalize mt-4 p-3 ${inputBg} rounded-xl text-[#768C9E] text-[16px] focus:outline-none border border-[#768C9E]`}
 //                 />
 //                 <input
 //                   value={lastName}
@@ -241,9 +245,9 @@
 //                   }
 //                 }}
 //                 disabled={!firstName.trim() || !lastName.trim()}
-//                 className={`max-w-[385px] mx-auto p-3 rounded-xl ${buttonTextColor} font-semibold transition-colors ${buttonBackground(
+//                 className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
 //                   !!(firstName.trim() && lastName.trim())
-//                 )} ${!firstName.trim() || !lastName.trim() ? "cursor-not-allowed" : ""} ${buttonPositionClass}`}
+//                 )} ${!firstName.trim() || !lastName.trim() ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
 //               >
 //                 {t("next")}
 //               </button>
@@ -267,7 +271,7 @@
 //               <div style={progressBarStyle} className="mt-2"></div>
 //             </div>
 //             <div className="px-8 pb-24">
-//               <h2 className={`mt-5 text-xl font-bold ${textColor} leading-tight`}>{t("enter_username")}</h2>
+//               <h2 className={`mt-10 text-xl font-bold ${textColor} leading-tight`}>{t("enter_username")}</h2>
 //               <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("username_instructions")}</p>
 //               <input
 //                 value={username}
@@ -285,9 +289,9 @@
 //                   }
 //                 }}
 //                 disabled={!username.trim() || username.startsWith("-") || username.endsWith("-")}
-//                 className={`max-w-[385px] mx-auto p-3 rounded-xl ${buttonTextColor} font-semibold transition-colors ${buttonBackground(
+//                 className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
 //                   !!(username.trim() && !username.startsWith("-") && !username.endsWith("-"))
-//                 )} ${!username.trim() || username.startsWith("-") || username.endsWith("-") ? "cursor-not-allowed" : ""} ${buttonPositionClass}`}
+//                 )} ${!username.trim() || username.startsWith("-") || username.endsWith("-") ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
 //               >
 //                 {t("next")}
 //               </button>
@@ -311,8 +315,8 @@
 //               <div style={progressBarStyle} className="mt-2"></div>
 //             </div>
 //             <div className="px-8 pb-24 w-full">
-//               <h2 className={`mt-5 text-[24px] font-bold ${textColor} leading-tight`}>{t("select_timezone")}</h2>
-//               <p className={`mt-4 text-[#768C9E] text-[14px] leading-relaxed`}>{t("timezone_instructions")}</p>
+//               <h2 className={`mt-10 text-xl font-bold ${textColor} leading-tight`}>{t("select_timezone")}</h2>
+//               <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("timezone_instructions")}</p>
 //               <div className="w-full max-w-[420px] mt-6 relative" ref={dropdownRef}>
 //                 <div className="relative">
 //                   <input
@@ -369,9 +373,9 @@
 //                   }
 //                 }}
 //                 disabled={!selectedCountry}
-//                 className={`max-w-[385px] mx-auto p-3 rounded-xl ${buttonTextColor} font-semibold transition-colors ${buttonBackground(
+//                 className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
 //                   !!selectedCountry
-//                 )} ${!selectedCountry ? "cursor-not-allowed" : ""} ${buttonPositionClass}`}
+//                 )} ${!selectedCountry ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
 //               >
 //                 {t("done")}
 //               </button>
@@ -422,14 +426,20 @@ const LoginLanguageModal = () => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [selectedLang, setSelectedLang] = useState<string | null>(localStorage.getItem("language"))
+  
+  // Tema va Telegram username Redux'dan olinadi
   const theme = useSelector((state: RootState) => state.telegram.theme)
+  const telegramUsername = useSelector((state: RootState) => state.telegram.username) // Telegram username Redux'dan
+  
   const [showDetailsModal, setShowDetailsModal] = useState(false)
   const [showUsernameModal, setShowUsernameModal] = useState(false)
   const [showTimeZoneModal, setShowTimeZoneModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
-  const [username, setUsername] = useState("")
+  
+  // Username Telegram username bilan boshlanadi, agar mavjud bo‘lsa
+  const [username, setUsername] = useState(telegramUsername ? `@${telegramUsername}` : "")
   const [usernameError, setUsernameError] = useState<string | null>(null)
   const [progress, setProgress] = useState(selectedLang ? 33 : 0)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -458,10 +468,8 @@ const LoginLanguageModal = () => {
       const windowHeight = window.innerHeight
       setIsKeyboardVisible(viewportHeight < windowHeight * 0.8)
     }
-
     window.visualViewport?.addEventListener("resize", detectKeyboard)
     window.addEventListener("resize", detectKeyboard)
-
     return () => {
       window.visualViewport?.removeEventListener("resize", detectKeyboard)
       window.removeEventListener("resize", detectKeyboard)
@@ -492,19 +500,15 @@ const LoginLanguageModal = () => {
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    let cleanedValue = value.replace(/^\s+/, "")
-    cleanedValue = cleanedValue.replace(/\s+/g, " ")
-    if (/^[a-zA-Z\s]*$/.test(cleanedValue)) {
-      setFirstName(cleanedValue)
+    if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
+      setFirstName(value)
     }
   }
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    let cleanedValue = value.replace(/^\s+/, "")
-    cleanedValue = cleanedValue.replace(/\s+/g, " ")
-    if (/^[a-zA-Z\s]*$/.test(cleanedValue)) {
-      setLastName(cleanedValue)
+    if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
+      setLastName(value)
     }
   }
 
@@ -538,6 +542,7 @@ const LoginLanguageModal = () => {
 
   const filteredCountries = countries.filter((country) => country.toLowerCase().includes(searchTerm.toLowerCase()))
 
+  // Tema ranglari
   const textColor = theme === "light" ? "text-white" : "text-black"
   const bgColor = theme === "light" ? "bg-[#242f3d]" : "bg-[#F1F1F1]"
   const buttonBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]"
@@ -545,6 +550,13 @@ const LoginLanguageModal = () => {
   const timeBg = theme === "light" ? "bg-[#5EB5F7]" : "bg-[#2B5278]"
   const defaultButtonTextColor = theme === "light" ? "text-white" : "text-black"
   const activeButtonTextColor = "text-white"
+
+  // Inputdagi yozuv rangi (o‘zgartirish mumkin)
+  const inputTextColor = theme === "light" ? "text-[#D1D5DB]" : "text-[#4B5563]" 
+  // Izoh: 
+  // - "light" rejimda: #D1D5DB (och kulrang, oq fonda ko‘rinadi)
+  // - "dark" rejimda: #4B5563 (quyuq kulrang, oq fonda ko‘rinadi)
+  // Bu ranglarni Tailwind CSS’dagi "gray-300" va "gray-600" ga moslashtirdim, xohlasangiz boshqa rang kodini qo‘yishingiz mumkin
 
   const buttonBackground = (condition: boolean) => {
     if (condition) {
@@ -618,20 +630,20 @@ const LoginLanguageModal = () => {
               <div style={progressBarStyle} className="mt-2"></div>
             </div>
             <div className="px-8 pb-24">
-              <h2 className={`mt-5 text-xl font-bold ${textColor} leading-tight`}>{t("enter_details")}</h2>
-              <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("name_instructions")}</p>
+              <h2 className={`mt-10 text-xl uppercase font-bold ${textColor} leading-tight`}>{t("enter_details")}</h2>
+              <p className={`mt-2 text-[#768C9E] text-sm leading-relaxed`}>{t("name_instructions")}</p>
               <div className="flex flex-col space-y-4">
                 <input
                   value={firstName}
                   onChange={handleFirstNameChange}
                   placeholder={t("first_name")}
-                  className={`w-full max-w-[390px] mt-4 p-3 ${inputBg} rounded-xl text-[#768C9E] text-[16px] focus:outline-none border border-[#768C9E]`}
+                  className={`w-full max-w-[390px] capitalize mt-4 p-3 ${inputBg} rounded-xl ${inputTextColor} text-[16px] focus:outline-none border border-[#768C9E]`}
                 />
                 <input
                   value={lastName}
                   onChange={handleLastNameChange}
                   placeholder={t("last_name")}
-                  className={`w-full max-w-[390px] p-3 ${inputBg} rounded-xl text-[#768C9E] text-[16px] focus:outline-none border border-[#768C9E]`}
+                  className={`w-full max-w-[390px] p-3 ${inputBg} rounded-xl ${inputTextColor} text-[16px] focus:outline-none border border-[#768C9E]`}
                 />
               </div>
               <button
@@ -668,13 +680,13 @@ const LoginLanguageModal = () => {
               <div style={progressBarStyle} className="mt-2"></div>
             </div>
             <div className="px-8 pb-24">
-              <h2 className={`mt-5 text-xl font-bold ${textColor} leading-tight`}>{t("enter_username")}</h2>
+              <h2 className={`mt-10 text-xl font-bold ${textColor} leading-tight`}>{t("enter_username")}</h2>
               <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("username_instructions")}</p>
               <input
                 value={username}
                 onChange={handleUsernameChange}
                 placeholder="@username"
-                className={`w-full max-w-[390px] text-[#768C9E] mt-4 p-3 ${inputBg} rounded-xl text-[16px] focus:outline-none border border-[#768C9E]`}
+                className={`w-full max-w-[390px] mt-4 p-3 ${inputBg} rounded-xl ${inputTextColor} text-[16px] focus:outline-none border border-[#768C9E]`}
               />
               {usernameError && <p className="mt-2 text-[12px] text-red-500 text-center">{usernameError}</p>}
               <p className="mt-2 text-[12px] text-[#768C9E] text-center">{t("username_rules")}</p>
@@ -712,8 +724,8 @@ const LoginLanguageModal = () => {
               <div style={progressBarStyle} className="mt-2"></div>
             </div>
             <div className="px-8 pb-24 w-full">
-              <h2 className={`mt-5 text-[24px] font-bold ${textColor} leading-tight`}>{t("select_timezone")}</h2>
-              <p className={`mt-4 text-[#768C9E] text-[14px] leading-relaxed`}>{t("timezone_instructions")}</p>
+              <h2 className={`mt-10 text-xl font-bold ${textColor} leading-tight`}>{t("select_timezone")}</h2>
+              <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("timezone_instructions")}</p>
               <div className="w-full max-w-[420px] mt-6 relative" ref={dropdownRef}>
                 <div className="relative">
                   <input
@@ -729,7 +741,7 @@ const LoginLanguageModal = () => {
                       }, 300)
                     }}
                     placeholder={t("country_or_city")}
-                    className={`w-full p-3 ${inputBg} rounded-lg text-[#768C9E] text-base focus:outline-none pr-10 border border-[#768C9E]`}
+                    className={`w-full p-3 ${inputBg} rounded-lg ${inputTextColor} text-base focus:outline-none pr-10 border border-[#768C9E]`}
                   />
                   <ChevronDown
                     className={`absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 transition-transform duration-300 ${

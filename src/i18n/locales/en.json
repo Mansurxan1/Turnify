@@ -7,18 +7,5 @@
     "uz": "Uzbek",
     "ru": "Russian",
     "en": "English",
-    "next": "Select",
-     "enter_details": "ENTER YOUR DETAILS",
-    "name_instructions": "Enter your first and last name using only letters.",
-    "your_name": "First and last name",
-    "username_error": "Please, the '-' character should not be at the beginning or end of the username.",
-    "username_instructions": "Spaces, emojis, and offensive words are not allowed.",
-    "username_rules": "Only letters, numbers, and the '-' character are allowed.",
-    "done": "Done",
-    "select_timezone": "SELECT YOUR TIME ZONE",
-    "timezone_instructions": "To receive tasks at the correct time, enter a country or city name and select the appropriate time zone.",
-    "country_or_city": "Country or city name...",
-    "success": "Success",
-    "registered": "You have registered!",
-    "no_results": "No results found"
+    "next": "Next"
 }
