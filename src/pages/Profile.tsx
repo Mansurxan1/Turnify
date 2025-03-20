@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { firstName, lastName, photoUrl, theme, telegramId } = useSelector(
+  const { firstName, lastName, photoUrl, theme, telegramId, username } = useSelector(
     (state: RootState) => state.telegram
   );
 
@@ -54,6 +54,7 @@ const Profile = () => {
         </div>
       )}
       <p className="mb-2">Telegram ID: {telegramId}</p>
+      <p className="mb-2">Username: {username ? `@${username}` : "Yo‘q"}</p>
     </div>
   );
 };
