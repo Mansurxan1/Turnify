@@ -54,7 +54,7 @@ const Profile = () => {
         </div>
       )}
       <p className="mb-2">Telegram ID: {telegramId}</p>
-      <p className="mb-2">Username: {username ? `@${username}` : "Yo‘q"}</p>
+      <p className="mb-2">Username: {username ? `@ ${username}` : "Yo‘q"}</p>
     </div>
   );
 };

@@ -25,7 +25,7 @@ const LoginLanguageModal = () => {
   
   // Tema va Telegram username Redux'dan olinadi
   const theme = useSelector((state: RootState) => state.telegram.theme)
-  const telegramUsername = useSelector((state: RootState) => state.telegram.username) // "mansurxan1" kabi
+  const telegramUsername = useSelector((state: RootState) => state.telegram.username) // Telegram username Redux'dan
   
   const [showDetailsModal, setShowDetailsModal] = useState(false)
   const [showUsernameModal, setShowUsernameModal] = useState(false)
@@ -34,7 +34,7 @@ const LoginLanguageModal = () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   
-  // Username Telegram username bilan boshlanadi
+  // Username Telegram username bilan boshlanadi, agar mavjud bo‘lsa
   const [username, setUsername] = useState(telegramUsername ? `@${telegramUsername}` : "")
   const [usernameError, setUsernameError] = useState<string | null>(null)
   const [progress, setProgress] = useState(selectedLang ? 33 : 0)
@@ -44,11 +44,10 @@ const LoginLanguageModal = () => {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
 
-  // Telegram username o‘zgarsa, input'ni yangilaymiz
+  // Telegram username yangilanganda input’ni sinxronlashtirish
   useEffect(() => {
-    console.log("Redux'dan kelgan Telegram Username:", telegramUsername); // Debugging
     if (telegramUsername) {
-      setUsername(`@${telegramUsername}`) // "@mansurxan1" kabi
+      setUsername(`@${telegramUsername}`) // Redux’dan kelgan username’ni avtomatik joylashtiramiz
     }
   }, [telegramUsername])
 
@@ -154,7 +153,8 @@ const LoginLanguageModal = () => {
   const timeBg = theme === "light" ? "bg-[#5EB5F7]" : "bg-[#2B5278]"
   const defaultButtonTextColor = theme === "light" ? "text-white" : "text-black"
   const activeButtonTextColor = "text-white"
-  const inputTextColor = theme === "light" ? "text-[#D1D5DB]" : "text-[#4B5563]"
+  const inputTextColor = theme === "light" ? "text-[#D1D5DB]" : "text-[#4B5563]" 
+  // Izoh: "light" rejimda och kulrang (#D1D5DB), "dark" rejimda quyuq kulrang (#4B5563)
 
   const buttonBackground = (condition: boolean) => {
     if (condition) {
