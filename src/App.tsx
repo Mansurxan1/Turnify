@@ -7,7 +7,6 @@ import AppRouter from "./router/AppRouter";
 const App = () => {
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.telegram.theme);
-
   useEffect(() => {
     const checkTelegram = () => {
       try {
