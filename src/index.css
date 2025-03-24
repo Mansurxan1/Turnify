@@ -30,5 +30,20 @@
 }
 
 body {
-  font-family: 'Inter';
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Telegram headerini yashirish yoki moslashtirish uchun */
+#telegram-web-app-header {
+  display: none !important; /* Agar Telegram headerini butunlay yashirmoqchi bo'lsangiz */
+}
+
+/* Yoki headerni dizayn bilan moslashtirish */
+@media (max-width: 450px) {
+  .min-h-screen {
+    height: 100vh;
+    overflow-y: auto;
+  }
 }
