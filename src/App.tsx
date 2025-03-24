@@ -62,28 +62,37 @@
 // export default App;
 
 
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserData, toggleTheme } from "./store/telegramSlice";
-import { RootState } from "./store/store";
-import AppRouter from "./router/AppRouter";
+"use client"
+
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { setUserData, toggleTheme } from "./store/telegramSlice"
+import type { RootState } from "./store/store"
+import AppRouter from "./router/AppRouter"
 
 const App = () => {
-  const dispatch = useDispatch();
-  const theme = useSelector((state: RootState) => state.telegram.theme);
+  const dispatch = useDispatch()
+  const theme = useSelector((state: RootState) => state.telegram.theme)
 
   useEffect(() => {
-    const initializeTelegram = () => {
+    const checkTelegram = () => {
       try {
         if (window.Telegram?.WebApp) {
-          const webApp = window.Telegram.WebApp;
-          webApp.ready();
-          webApp.expand(); // To'liq ekran rejimi
+          const webApp = window.Telegram.WebApp
+          webApp.ready()
+          webApp.expand()
 
-          // Header rangini saytingizga moslashtirish
-          webApp.setHeaderColor(theme === "dark" ? "#1F2937" : "#FFFFFF");
+          // Set header color based on theme
+          if (theme === "dark") {
+            webApp.setHeaderColor("#111827") // Match your bg-gray-900
+          } else {
+            webApp.setHeaderColor("#FFFFFF") // Match your bg-white
+          }
 
-          const user = webApp.initDataUnsafe?.user || {};
+          // Set the background color to match your theme
+          webApp.setBackgroundColor(theme === "dark" ? "#111827" : "#FFFFFF")
+
+          const user = (webApp as any).initDataUnsafe?.user || {}
           dispatch(
             setUserData({
               firstName: user.first_name || "Noma'lum",
@@ -91,42 +100,49 @@ const App = () => {
               photoUrl: user.photo_url || null,
               theme: webApp.colorScheme === "dark" ? "dark" : "light",
               telegramId: user.id?.toString() || "",
-            })
-          );
+            }),
+          )
 
-          // Tema o'zgarganda yangilash
           webApp.onEvent("themeChanged", () => {
-            dispatch(toggleTheme());
-            webApp.setHeaderColor(theme === "dark" ? "#1F2937" : "#FFFFFF");
-          });
+            dispatch(toggleTheme())
+            // Update header color when theme changes
+            if (webApp.colorScheme === "dark") {
+              webApp.setHeaderColor("#111827")
+              webApp.setBackgroundColor("#111827")
+            } else {
+              webApp.setHeaderColor("#FFFFFF")
+              webApp.setBackgroundColor("#FFFFFF")
+            }
+          })
         } else {
-          console.error("Telegram WebApp yuklanmadi");
+          console.error("Telegram WebApp yuklanmadi")
         }
       } catch (error) {
-        console.error("Telegram WebApp bilan xatolik:", error);
+        console.error("Telegram WebApp bilan xatolik:", error)
       }
-    };
+    }
 
     if (!window.Telegram) {
-      const script = document.createElement("script");
-      script.src = "https://telegram.org/js/telegram-web-app.js";
-      script.async = true;
-      script.onload = initializeTelegram;
-      document.head.appendChild(script);
+      const script = document.createElement("script")
+      script.src = "https://telegram.org/js/telegram-web-app.js"
+      script.async = true
+      script.onload = checkTelegram
+      document.head.appendChild(script)
     } else {
-      initializeTelegram();
+      checkTelegram()
     }
-  }, [dispatch, theme]);
+  }, [dispatch, theme])
 
   return (
     <div
-      className={`min-h-screen max-w-[450px] mx-auto overflow-hidden ${
+      className={`min-h-screen max-w-[450px] mx-auto ${
         theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
       <AppRouter />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
+
