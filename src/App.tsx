@@ -1,11 +1,10 @@
 "use client"
-
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setUserData, toggleTheme } from "./store/telegramSlice"
 import type { RootState } from "./store/store"
+import type { TelegramWebApp } from "./types/telegram-webapp"
 import AppRouter from "./router/AppRouter"
-import { TelegramWebApp } from "./types/telegram-webapp"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -15,7 +14,7 @@ const App = () => {
     const checkTelegram = () => {
       try {
         if (window.Telegram?.WebApp) {
-          const webApp = window.Telegram.WebApp
+          const webApp = window.Telegram.WebApp as TelegramWebApp
           webApp.ready()
           webApp.expand()
 
@@ -29,7 +28,7 @@ const App = () => {
           // Set the background color to match your theme
           webApp.setBackgroundColor(theme === "dark" ? "#111827" : "#FFFFFF")
 
-          const user = (webApp as any).initDataUnsafe?.user || {}
+          const user = webApp.initDataUnsafe?.user || {}
           dispatch(
             setUserData({
               firstName: user.first_name || "Noma'lum",

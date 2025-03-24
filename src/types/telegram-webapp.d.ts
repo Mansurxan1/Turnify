@@ -48,6 +48,7 @@ export interface TelegramWebApp {
       first_name?: string;
       last_name?: string;
       photo_url?: string;
+      id?: number;
     };
   };
 }
