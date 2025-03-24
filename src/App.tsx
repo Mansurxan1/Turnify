@@ -14,6 +14,7 @@ const App = () => {
           const webApp = window.Telegram.WebApp;
           webApp.ready();
           webApp.expand();
+          webApp.disableHeader();
 
           const user = (webApp as any).initDataUnsafe?.user || {};
           dispatch(

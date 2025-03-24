@@ -1,6 +1,7 @@
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
+  disableHeader: () => void;
   close: () => void;
   colorScheme: "light" | "dark";
   onEvent: (event: string, callback: () => void) => void;
