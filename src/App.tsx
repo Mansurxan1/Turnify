@@ -79,13 +79,15 @@ const App = () => {
           webApp.ready();
           webApp.expand();
 
-          // Request fullscreen mode
-          if (webApp.requestFullscreen && webApp.requestFullscreen.isAvailable()) {
+          // Request fullscreen mode to minimize Telegram's default UI
+          if (webApp.requestFullscreen && webApp.isFullscreenAvailable) {
             webApp.requestFullscreen();
           }
 
-          // Set header color to transparent to avoid Telegram's default header styling
+          // Attempt to make the Telegram header transparent
           webApp.setHeaderColor("transparent");
+          // Alternatively, try to set it to match the background
+          // webApp.setHeaderColor(theme === "dark" ? "#1C2526" : "#FFFFFF");
 
           const user = (webApp as any).initDataUnsafe?.user || {};
           dispatch(
@@ -100,13 +102,15 @@ const App = () => {
 
           webApp.onEvent("themeChanged", () => {
             dispatch(toggleTheme());
+            // Update header color when theme changes
+            webApp.setHeaderColor("transparent");
           });
 
           webApp.onEvent("fullscreenChanged", () => {
             console.log("Fullscreen mode:", webApp.isFullscreen);
           });
 
-          // Optional: Handle the close button (X) functionality
+          // Enable closing confirmation for the close button
           webApp.enableClosingConfirmation();
         } else {
           console.error("Telegram WebApp yuklanmadi");
@@ -137,8 +141,7 @@ const App = () => {
   // Function to handle the menu button (three dots)
   const handleMenu = () => {
     if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.openMainMenu(); // Opens Telegram's main menu if available
-      // Alternatively, you can show a custom menu here
+      window.Telegram.WebApp.openMainMenu();
       console.log("Menu clicked");
     }
   };
@@ -149,16 +152,15 @@ const App = () => {
         theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
       style={{
-        paddingTop: "0px",
+        paddingTop: "0px", // Remove padding since we're handling the header
       }}
     >
       {/* Custom Header */}
       <div
         className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4"
         style={{
-          background: theme === "dark" ? "#1C2526" : "#FFFFFF", // Match the dark background from the image
-          height: "56px", // Adjust height to match the image
-          borderBottom: theme === "dark" ? "1px solid #2A3435" : "1px solid #E5E7EB", // Subtle border for separation
+          background: "transparent", // Make the custom header transparent
+          height: "56px", // Match Telegram's typical header height
         }}
       >
         {/* Title */}
@@ -206,7 +208,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* Content with padding to avoid overlap with the fixed header */}
+      {/* Content */}
       <div className="pt-[56px]">
         <AppRouter />
       </div>

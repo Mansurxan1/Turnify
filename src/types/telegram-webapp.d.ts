@@ -6,6 +6,7 @@ interface TelegramWebApp {
   onEvent: (event: string, callback: () => void) => void;
   setHeaderColor: (color: string) => void;
   isFullscreen: boolean;
+  isFullscreenAvailable: boolean;
   requestFullscreen: {
     isAvailable: () => boolean;
   } & (() => void);
