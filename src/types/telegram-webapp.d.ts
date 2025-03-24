@@ -9,6 +9,8 @@ interface TelegramWebApp {
   requestFullscreen: {
     isAvailable: () => boolean;
   } & (() => void);
+  openMainMenu: () => void;
+  enableClosingConfirmation: () => void;
   initDataUnsafe?: {
     user?: {
       first_name?: string;
