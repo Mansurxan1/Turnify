@@ -29,6 +29,22 @@
   font-weight: 500 700;
 }
 
+/* Add this to your global CSS file */
 body {
-  font-family: 'Inter';
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.telegram-webapp {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Ensure content doesn't get hidden behind fixed header */
+.content-wrapper {
+  position: relative;
+  height: 100%;
 }

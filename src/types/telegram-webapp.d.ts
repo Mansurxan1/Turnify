@@ -1,11 +1,14 @@
 interface TelegramWebApp {
   ready: () => void;
   expand: () => void;
-  disableHeader: () => void;
   close: () => void;
   colorScheme: "light" | "dark";
   onEvent: (event: string, callback: () => void) => void;
   setHeaderColor: (color: string) => void;
+  isFullscreen: boolean;
+  requestFullscreen: {
+    isAvailable: () => boolean;
+  } & (() => void);
   initDataUnsafe?: {
     user?: {
       first_name?: string;
