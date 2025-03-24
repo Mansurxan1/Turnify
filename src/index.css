@@ -30,33 +30,5 @@
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-.min-h-screen {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-/* Ensure buttons in the header are clean */
-button:focus {
-  outline: none;
-}
-
-/* Adjust SVG icon colors based on theme */
-.bg-gray-900 .fixed svg {
-  stroke: #ffffff; /* White icons in dark mode */
-}
-
-.bg-white .fixed svg {
-  stroke: #000000; /* Black icons in light mode */
-}
-
-/* Ensure the header text and icons are visible against the transparent background */
-.fixed {
-  color: #ffffff; /* White text/icons to match the first image */
+  font-family: 'Inter';
 }

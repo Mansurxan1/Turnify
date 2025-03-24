@@ -79,15 +79,13 @@ const App = () => {
           webApp.ready();
           webApp.expand();
 
-          // Request fullscreen mode to minimize Telegram's default UI
+          // To‘liq ekran rejimini yoqish
           if (webApp.requestFullscreen && webApp.isFullscreenAvailable) {
             webApp.requestFullscreen();
           }
 
-          // Attempt to make the Telegram header transparent
+          // Telegramning o‘z headerini shaffof qilish
           webApp.setHeaderColor("transparent");
-          // Alternatively, try to set it to match the background
-          // webApp.setHeaderColor(theme === "dark" ? "#1C2526" : "#FFFFFF");
 
           const user = (webApp as any).initDataUnsafe?.user || {};
           dispatch(
@@ -102,15 +100,14 @@ const App = () => {
 
           webApp.onEvent("themeChanged", () => {
             dispatch(toggleTheme());
-            // Update header color when theme changes
-            webApp.setHeaderColor("transparent");
+            webApp.setHeaderColor("transparent"); // Tema o‘zgarganda ham shaffof bo‘lib qoladi
           });
 
           webApp.onEvent("fullscreenChanged", () => {
-            console.log("Fullscreen mode:", webApp.isFullscreen);
+            console.log("To‘liq ekran rejimi:", webApp.isFullscreen);
           });
 
-          // Enable closing confirmation for the close button
+          // Yopish tugmasi uchun tasdiqlashni yoqish
           webApp.enableClosingConfirmation();
         } else {
           console.error("Telegram WebApp yuklanmadi");
@@ -131,18 +128,18 @@ const App = () => {
     }
   }, [dispatch]);
 
-  // Function to handle the close button (X)
+  // Yopish tugmasi (X) uchun funksiya
   const handleClose = () => {
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.close();
     }
   };
 
-  // Function to handle the menu button (three dots)
+  // Menyu tugmasi (uch nuqta) uchun funksiya
   const handleMenu = () => {
     if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.openMainMenu();
-      console.log("Menu clicked");
+      console.log("Menyu bosildi");
     }
   };
 
@@ -152,25 +149,25 @@ const App = () => {
         theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
       style={{
-        paddingTop: "0px", // Remove padding since we're handling the header
+        paddingTop: "0px", // Header uchun qo‘shimcha joy ochmaymiz
       }}
     >
-      {/* Custom Header */}
+      {/* Maxsus Header */}
       <div
         className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-4"
         style={{
-          background: "transparent", // Make the custom header transparent
-          height: "56px", // Match Telegram's typical header height
+          background: "transparent", // Maxsus header shaffof bo‘ladi
+          height: "56px", // Telegram header balandligiga moslashtiramiz
         }}
       >
-        {/* Title */}
+        {/* Sarlavha */}
         <div className="text-lg font-semibold">
           Turnify
         </div>
 
-        {/* Icons on the right */}
+        {/* O‘ng tarafdagi ikonalar */}
         <div className="flex items-center space-x-3">
-          {/* Three Dots (Menu) */}
+          {/* Uch nuqta (Menyu) */}
           <button onClick={handleMenu} className="focus:outline-none">
             <svg
               className="w-6 h-6"
@@ -188,7 +185,7 @@ const App = () => {
             </svg>
           </button>
 
-          {/* Close Button (X) */}
+          {/* Yopish tugmasi (X) */}
           <button onClick={handleClose} className="focus:outline-none">
             <svg
               className="w-6 h-6"
@@ -208,7 +205,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Kontent */}
       <div className="pt-[56px]">
         <AppRouter />
       </div>
