@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserData, toggleTheme } from "./store/telegramSlice";
-import { RootState } from "./store/store";
+import { useDispatch } from "react-redux";
+import { setTheme, setUserData } from "./store/telegramSlice"; 
 import AppRouter from "./router/AppRouter";
 
-const App = () => {
+function App() {
   const dispatch = useDispatch();
-  const theme = useSelector((state: RootState) => state.telegram.theme);
+
   useEffect(() => {
     const checkTelegram = () => {
       try {
@@ -15,20 +14,35 @@ const App = () => {
           webApp.ready();
           webApp.expand();
 
-          const user = (webApp as any).initDataUnsafe?.user || {};
-          dispatch(
-            setUserData({
-              firstName: user.first_name || "Noma'lum",
-              lastName: user.last_name || "",
-              photoUrl: user.photo_url || null,
-              theme: webApp.colorScheme === "dark" ? "dark" : "light",
-              telegramId: user.id?.toString() || "",
-            })
-          );
+          const initialTheme = webApp.colorScheme || "light";
+          dispatch(setTheme(initialTheme));
+
+          // Foydalanuvchi ma'lumotlarini olish 
+          const initData = webApp.initDataUnsafe?.user;
+          if (initData) {
+            dispatch(
+              setUserData({
+                firstName: initData.first_name || "",
+                lastName: initData.last_name || "",
+                photoUrl: initData.photo_url || null,
+                theme: initialTheme,
+                telegramId: initData.id || 0,
+                username: initData.username || "",
+              })
+            );
+          }
 
           webApp.onEvent("themeChanged", () => {
-            dispatch(toggleTheme());
+            const newTheme = webApp.colorScheme || "light";
+            dispatch(setTheme(newTheme));
           });
+
+          if (webApp.isVersionAtLeast("8.0")) {
+            webApp.requestFullscreen();
+          }
+          if (webApp.isVersionAtLeast("7.0")) {
+            webApp.setHeaderColor("#00000000");
+          }
         } else {
           console.error("Telegram WebApp yuklanmadi");
         }
@@ -49,14 +63,10 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div
-      className={`min-h-screen max-w-[450px] mx-auto ${
-        theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"
-      }`}
-    >
+    <div className="min-h-screen mx-auto">
       <AppRouter />
     </div>
   );
-};
+}
 
 export default App;

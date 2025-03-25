@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef } from "react"
-import type React from "react"
-import { useTranslation } from "react-i18next"
-import { Check, ChevronDown } from "lucide-react"
-import { useNavigate } from "react-router-dom"
-import { useSelector } from "react-redux"
-import type { RootState } from "../store/store"
+import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Check, ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
-const countries = [
+const countries: string[] = [
   "Afghanistan",
   "Albania",
   "Algeria",
@@ -16,212 +15,212 @@ const countries = [
   "Argentina",
   "Armenia",
   "Australia",
-]
+];
 
-const LoginLanguageModal = () => {
-  const { t, i18n } = useTranslation()
-  const navigate = useNavigate()
-  const [selectedLang, setSelectedLang] = useState<string | null>(localStorage.getItem("language"))
-  
-  // Tema va Telegram username Redux'dan olinadi
-  const theme = useSelector((state: RootState) => state.telegram.theme)
-  const telegramUsername = useSelector((state: RootState) => state.telegram.username) // Telegram username Redux'dan
-  
-  const [showDetailsModal, setShowDetailsModal] = useState(false)
-  const [showUsernameModal, setShowUsernameModal] = useState(false)
-  const [showTimeZoneModal, setShowTimeZoneModal] = useState(false)
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  
-  // Username Telegram username bilan boshlanadi, agar mavjud bo‘lsa
-  const [username, setUsername] = useState(telegramUsername ? `@${telegramUsername}` : "")
-  const [usernameError, setUsernameError] = useState<string | null>(null)
-  const [progress, setProgress] = useState(selectedLang ? 33 : 0)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCountry, setSelectedCountry] = useState("")
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+const LoginLanguageModal: React.FC = () => {
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const [selectedLang, setSelectedLang] = useState<string | null>(localStorage.getItem("language"));
+  const theme = useSelector((state: RootState) => state.telegram.theme) || "light";
+  const telegramUsername = useSelector((state: RootState) => state.telegram.username);
 
-  // Telegram username yangilanganda input’ni sinxronlashtirish
-  useEffect(() => {
-    if (telegramUsername) {
-      setUsername(`@${telegramUsername}`) // Redux’dan kelgan username’ni avtomatik joylashtiramiz
-    }
-  }, [telegramUsername])
+  const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
+  const [showUsernameModal, setShowUsernameModal] = useState<boolean>(false);
+  const [showTimeZoneModal, setShowTimeZoneModal] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [username, setUsername] = useState<string>(telegramUsername ? `@${telegramUsername}` : "");
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(selectedLang ? 33 : 0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    if (selectedLang) i18n.changeLanguage(selectedLang)
-  }, [selectedLang, i18n])
+    if (selectedLang) i18n.changeLanguage(selectedLang);
+  }, [selectedLang, i18n]);
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false)
+        setIsDropdownOpen(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const detectKeyboard = () => {
-      const viewportHeight = window.visualViewport?.height || window.innerHeight
-      const windowHeight = window.innerHeight
-      setIsKeyboardVisible(viewportHeight < windowHeight * 0.8)
-    }
-    window.visualViewport?.addEventListener("resize", detectKeyboard)
-    window.addEventListener("resize", detectKeyboard)
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const windowHeight = window.innerHeight;
+      setIsKeyboardVisible(viewportHeight < windowHeight * 0.8);
+    };
+    window.visualViewport?.addEventListener("resize", detectKeyboard);
+    window.addEventListener("resize", detectKeyboard);
     return () => {
-      window.visualViewport?.removeEventListener("resize", detectKeyboard)
-      window.removeEventListener("resize", detectKeyboard)
-    }
-  }, [])
+      window.visualViewport?.removeEventListener("resize", detectKeyboard);
+      window.removeEventListener("resize", detectKeyboard);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!selectedLang) {
-      setProgress(0)
-    } else if (showDetailsModal) {
-      if (firstName.trim() && !lastName.trim()) setProgress(49.5)
-      else if (firstName.trim() && lastName.trim()) setProgress(66)
-      else setProgress(33)
+    if (!selectedLang) setProgress(0);
+    else if (showDetailsModal) {
+      if (firstName.trim() && !lastName.trim()) setProgress(49.5);
+      else if (firstName.trim() && lastName.trim()) setProgress(66);
+      else setProgress(33);
     } else if (showUsernameModal) {
-      setProgress(username.trim() ? 75 : 66)
+      setProgress(username.trim() && username !== "@" ? 75 : 66);
     } else if (showTimeZoneModal) {
-      setProgress(selectedCountry ? 100 : 75)
+      setProgress(selectedCountry ? 100 : 75);
     } else {
-      setProgress(33)
+      setProgress(33);
     }
-  }, [selectedLang, firstName, lastName, username, showDetailsModal, showUsernameModal, showTimeZoneModal, selectedCountry])
+  }, [selectedLang, firstName, lastName, username, showDetailsModal, showUsernameModal, showTimeZoneModal, selectedCountry]);
 
   const handleLanguageSelect = (lang: string) => {
-    setSelectedLang(lang)
-    localStorage.setItem("language", lang)
-    i18n.changeLanguage(lang)
-  }
+    setSelectedLang(lang);
+    localStorage.setItem("language", lang);
+    i18n.changeLanguage(lang);
+  };
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
-      setFirstName(value)
+      setFirstName(value);
     }
-  }
+  };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
-      setLastName(value)
+      setLastName(value);
     }
-  }
+  };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    if (/^[a-zA-Z0-9-]*$/.test(value)) {
-      setUsername(value)
-      if (value.startsWith("-") || value.endsWith("-")) {
-        setUsernameError(t("username_error"))
+    const value = e.target.value;
+    if (telegramUsername) {
+      // Agar Telegram username mavjud bo‘lsa, @ doim saqlanadi
+      if (!value.startsWith("@")) {
+        // Agar @ o‘chirilgan bo‘lsa, avvalgi qiymatni qaytarib qo‘yamiz yoki minimal @ qoldiramiz
+        setUsername(username || "@");
       } else {
-        setUsernameError(null)
+        const afterAt = value.slice(1); // @ dan keyingi qism
+        if (/^[a-zA-Z0-9-]*$/.test(afterAt)) {
+          setUsername(`@${afterAt}`);
+          if (afterAt.startsWith("-") || afterAt.endsWith("-")) {
+            setUsernameError(t("username_error"));
+          } else {
+            setUsernameError(null);
+          }
+        }
+      }
+    } else {
+      // Agar Telegram username bo‘lmasa, foydalanuvchi @ bilan boshlashni tanlashi mumkin
+      if (/^[@a-zA-Z0-9-]*$/.test(value)) {
+        setUsername(value);
+        if (value.startsWith("-") || value.endsWith("-")) {
+          setUsernameError(t("username_error"));
+        } else {
+          setUsernameError(null);
+        }
       }
     }
-  }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setSearchTerm(value)
-    setIsDropdownOpen(true)
-    if (!value.trim()) {
-      setSelectedCountry("")
-    }
-  }
+    const value = e.target.value;
+    setSearchTerm(value);
+    setIsDropdownOpen(true);
+    if (!value.trim()) setSelectedCountry("");
+  };
 
   const handleCountrySelect = (country: string) => {
-    setSelectedCountry(country)
-    setSearchTerm(country)
-    setIsDropdownOpen(false)
-    setProgress(100)
-  }
+    setSelectedCountry(country);
+    setSearchTerm(country);
+    setIsDropdownOpen(false);
+    setProgress(100);
+  };
 
-  const filteredCountries = countries.filter((country) => country.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredCountries = countries.filter((country) =>
+    country.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // Tema ranglari
-  const textColor = theme === "light" ? "text-white" : "text-black"
-  const bgColor = theme === "light" ? "bg-[#242f3d]" : "bg-[#F1F1F1]"
-  const buttonBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]"
-  const inputBg = theme === "light" ? "bg-[#293A4C]" : "bg-[#fff]"
-  const timeBg = theme === "light" ? "bg-[#5EB5F7]" : "bg-[#2B5278]"
-  const defaultButtonTextColor = theme === "light" ? "text-white" : "text-black"
-  const activeButtonTextColor = "text-white"
-  const inputTextColor = theme === "light" ? "text-[#D1D5DB]" : "text-[#4B5563]" 
-  // Izoh: "light" rejimda och kulrang (#D1D5DB), "dark" rejimda quyuq kulrang (#4B5563)
+  const textColor = theme === "light" ? "text-black" : "text-white";
+  const bgColor = theme === "light" ? "bg-[#F1F1F1]" : "bg-[#242f3d]";
+  const buttonBg = theme === "light" ? "bg-white" : "bg-[#293A4C]";
+  const inputBg = theme === "light" ? "bg-white" : "bg-[#293A4C]";
+  const timeBg = theme === "light" ? "bg-[#2B5278]" : "bg-[#5EB5F7]";
+  const defaultButtonTextColor = theme === "light" ? "text-black" : "text-white";
+  const activeButtonTextColor = "text-white";
+  const inputTextColor = theme === "light" ? "text-[#4B5563]" : "text-[#D1D5DB]";
 
-  const buttonBackground = (condition: boolean) => {
-    if (condition) {
-      return "bg-gradient-to-r from-[#0061FF] to-[#52DAFF]"
-    }
-    return `border ${theme === "light" ? "border-[#BFC8CF] bg-[#242f3d]" : "border-[#768C9E] bg-[#F1F1F1]"}`
-  }
+  const buttonBackground = (condition: boolean): string =>
+    condition
+      ? "bg-gradient-to-r from-[#0061FF] to-[#52DAFF]"
+      : `border ${theme === "light" ? "border-[#BFC8CF] bg-[#F1F1F1]" : "border-[#768C9E] bg-[#242f3d]"}`;
 
   const dropdownShadow =
-    theme === "light" ? "shadow-[0px_10px_15px_-3px_#00000026]" : "shadow-[0px_10px_15px_-3px_#00000033]"
+    theme === "light" ? "shadow-[0px_10px_15px_-3px_#00000026]" : "shadow-[0px_10px_15px_-3px_#00000033]";
 
   const progressBarStyle = {
-    height: "4px",
+    height: "3px",
     backgroundImage: `linear-gradient(to right, #0061FF 0%, #52DAFF ${progress}%, #E5E7EB ${progress}%, #E5E7EB 100%)`,
     width: "100%",
     transition: "background-image 0.3s ease",
-  }
+  };
 
-  const buttonPositionClass = isKeyboardVisible
-    ? "relative mt-8 mb-4"
-    : "fixed bottom-8 left-7 right-7"
+  const buttonPositionClass = isKeyboardVisible ? "relative mt-8 mb-4" : "fixed bottom-8 left-7 right-7";
 
   return (
-    <>
-      <div className={`flex pt-5 flex-col items-center justify-center min-h-screen ${bgColor} px-8 pb-20`}>
-        <div className="w-full absolute pt-2 mx-auto max-w-[450px] top-10 flex justify-start">
-          <div style={progressBarStyle}></div>
-        </div>
-        <h2 className={`text-3xl w-60 text-center font-inter font-bold ${textColor} mb-6`}>{t("language")}</h2>
-        <div className="w-full max-w-[390px] space-y-3">
-          {["uz", "en", "ru"].map((lang) => (
-            <button
-              key={lang}
-              onClick={() => handleLanguageSelect(lang)}
-              className={`w-full relative ${buttonBg} p-3 rounded-lg text-center font-medium flex items-center justify-center transition-colors ${
-                selectedLang === lang ? "text-[#5EB5F7]" : "text-[#768C9E]"
-              }`}
-            >
-              <span>{t(lang)}</span>
-              {selectedLang === lang && (
-                <span className="ml-2 text-[#5EB5F7] absolute right-4">
-                  <Check className="h-4 w-4" />
-                </span>
-              )}
-            </button>
-          ))}
+    <div className={`flex pt-5 flex-col items-center justify-center mx-auto max-w-[450px] min-h-screen w-full ${bgColor} px-8 pb-20`}>
+      <div className="w-full absolute pt-20 phone:pt-5 mx-auto max-w-[450px] top-8 flex justify-start">
+        <div style={progressBarStyle}></div>
+      </div>
+      <h2 className={`text-3xl w-60 text-center font-inter font-bold ${textColor} mb-6`}>{t("language")}</h2>
+      <div className="w-full max-w-[390px] space-y-3">
+        {["uz", "en", "ru"].map((lang) => (
           <button
-            onClick={() => selectedLang && setShowDetailsModal(true)}
-            disabled={!selectedLang}
-            className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
-              !!selectedLang
-            )} ${!selectedLang ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
+            key={lang}
+            onClick={() => handleLanguageSelect(lang)}
+            className={`w-full relative ${buttonBg} p-3 rounded-lg text-center font-medium flex items-center justify-center transition-colors ${
+              selectedLang === lang ? "text-[#5EB5F7]" : "text-[#768C9E]"
+            }`}
           >
-            {t("next")}
+            <span>{t(lang)}</span>
+            {selectedLang === lang && (
+              <span className="ml-2 text-[#5EB5F7] absolute right-4">
+                <Check className="h-4 w-4" />
+              </span>
+            )}
           </button>
-        </div>
+        ))}
+        <button
+          onClick={() => selectedLang && setShowDetailsModal(true)}
+          disabled={!selectedLang}
+          className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
+            !!selectedLang
+          )} ${!selectedLang ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
+        >
+          {t("next")}
+        </button>
       </div>
 
       {showDetailsModal && (
-        <div className="fixed pt-5 inset-0 flex items-center justify-center z-50">
-          <div
-            className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${bgColor} justify-start overflow-y-auto`}
-          >
+        <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
+          <div className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${bgColor} justify-start overflow-y-auto`}>
             <div className="max-w-[450px] w-full sticky top-0 flex flex-col z-10 bg-inherit">
               <button
-                onClick={() => (setShowDetailsModal(false), setProgress(33))}
-                className={`${textColor} text-[24px] px-4 self-start`}
+                onClick={() => {
+                  setShowDetailsModal(false);
+                  setProgress(33);
+                }}
+                className={`${textColor} text-[24px] px-4 pt-20 phone:pt-5 self-start`}
               >
                 <ChevronDown className="h-6 w-6 transform rotate-90" strokeWidth={3} />
               </button>
@@ -247,8 +246,8 @@ const LoginLanguageModal = () => {
               <button
                 onClick={() => {
                   if (firstName.trim() && lastName.trim()) {
-                    setShowDetailsModal(false)
-                    setShowUsernameModal(true)
+                    setShowDetailsModal(false);
+                    setShowUsernameModal(true);
                   }
                 }}
                 disabled={!firstName.trim() || !lastName.trim()}
@@ -264,14 +263,16 @@ const LoginLanguageModal = () => {
       )}
 
       {showUsernameModal && (
-        <div className="fixed pt-5 inset-0 flex items-center justify-center z-50">
-          <div
-            className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${bgColor} justify-start overflow-y-auto`}
-          >
+        <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
+          <div className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${bgColor} justify-start overflow-y-auto`}>
             <div className="max-w-[450px] w-full sticky top-0 flex flex-col z-10 bg-inherit">
               <button
-                onClick={() => (setShowUsernameModal(false), setShowDetailsModal(true), setProgress(66))}
-                className={`${textColor} text-[24px] px-4 self-start`}
+                onClick={() => {
+                  setShowUsernameModal(false);
+                  setShowDetailsModal(true);
+                  setProgress(66);
+                }}
+                className={`${textColor} text-[24px] px-4 pt-20 phone:pt-5 self-start`}
               >
                 <ChevronDown className="h-6 w-6 transform rotate-90" strokeWidth={3} />
               </button>
@@ -290,15 +291,15 @@ const LoginLanguageModal = () => {
               <p className="mt-2 text-[12px] text-[#768C9E] text-center">{t("username_rules")}</p>
               <button
                 onClick={() => {
-                  if (username.trim() && !username.startsWith("-") && !username.endsWith("-")) {
-                    setShowUsernameModal(false)
-                    setShowTimeZoneModal(true)
+                  if (username.trim() && username !== "@" && !username.startsWith("-") && !username.endsWith("-")) {
+                    setShowUsernameModal(false);
+                    setShowTimeZoneModal(true);
                   }
                 }}
-                disabled={!username.trim() || username.startsWith("-") || username.endsWith("-")}
+                disabled={!username.trim() || username === "@" || username.startsWith("-") || username.endsWith("-")}
                 className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
-                  !!(username.trim() && !username.startsWith("-") && !username.endsWith("-"))
-                )} ${!username.trim() || username.startsWith("-") || username.endsWith("-") ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
+                  !!(username.trim() && username !== "@" && !username.startsWith("-") && !username.endsWith("-"))
+                )} ${!username.trim() || username === "@" || username.startsWith("-") || username.endsWith("-") ? `cursor-not-allowed ${defaultButtonTextColor}` : activeButtonTextColor} ${buttonPositionClass}`}
               >
                 {t("next")}
               </button>
@@ -308,14 +309,16 @@ const LoginLanguageModal = () => {
       )}
 
       {showTimeZoneModal && (
-        <div className="fixed pt-5 inset-0 flex items-center justify-center z-50">
-          <div
-            className={`h-screen max-w-[450px] w-full mx-auto flex flex-col items-center justify-start ${bgColor} overflow-y-auto`}
-          >
+        <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
+          <div className={`h-screen max-w-[450px] w-full mx-auto flex flex-col items-center justify-start ${bgColor} overflow-y-auto`}>
             <div className="w-full max-w-[450px] sticky top-0 flex flex-col z-10 bg-inherit">
               <button
-                onClick={() => (setShowTimeZoneModal(false), setShowUsernameModal(true), setProgress(75))}
-                className={`${textColor} px-4 text-[24px] self-start`}
+                onClick={() => {
+                  setShowTimeZoneModal(false);
+                  setShowUsernameModal(true);
+                  setProgress(75);
+                }}
+                className={`${textColor} px-4 text-[24px] pt-20 phone:pt-5 self-start`}
               >
                 <ChevronDown className="h-6 w-6 transform rotate-90" strokeWidth={3} />
               </button>
@@ -329,15 +332,7 @@ const LoginLanguageModal = () => {
                   <input
                     value={searchTerm}
                     onChange={handleSearchChange}
-                    onFocus={() => {
-                      setIsDropdownOpen(true)
-                      setTimeout(() => {
-                        const element = document.activeElement
-                        if (element) {
-                          element.scrollIntoView({ behavior: "smooth", block: "center" })
-                        }
-                      }, 300)
-                    }}
+                    onFocus={() => setIsDropdownOpen(true)}
                     placeholder={t("country_or_city")}
                     className={`w-full p-3 ${inputBg} rounded-lg ${inputTextColor} text-base focus:outline-none pr-10 border border-[#768C9E]`}
                   />
@@ -374,9 +369,12 @@ const LoginLanguageModal = () => {
               <button
                 onClick={() => {
                   if (selectedCountry) {
-                    setShowTimeZoneModal(false)
-                    setShowSuccessModal(true)
-                    setTimeout(() => (setShowSuccessModal(false), navigate("/")), 3000)
+                    setShowTimeZoneModal(false);
+                    setShowSuccessModal(true);
+                    setTimeout(() => {
+                      setShowSuccessModal(false);
+                      navigate("/");
+                    }, 3000);
                   }
                 }}
                 disabled={!selectedCountry}
@@ -392,7 +390,7 @@ const LoginLanguageModal = () => {
       )}
 
       {showSuccessModal && (
-        <div className={`fixed inset-0 flex flex-col items-center justify-center ${bgColor} px-4 z-50`}>
+        <div className={`fixed inset-0 flex flex-col items-center justify-center ${bgColor} px-4 z-50 w-full`}>
           <div className="flex flex-col items-center justify-center">
             <div className="w-16 h-16 bg-gradient-to-r from-[#0061FF] to-[#52DAFF] rounded-lg flex items-center justify-center mb-4 transform rotate-12">
               <Check className="h-8 w-8 text-white" />
@@ -402,8 +400,8 @@ const LoginLanguageModal = () => {
           </div>
         </div>
       )}
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default LoginLanguageModal
+export default LoginLanguageModal;
