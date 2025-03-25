@@ -6,7 +6,9 @@ export default {
     extend: {
       fontFamily: {
         inter: ["Inter"],
-        manrope: ["Manrope"],
+      },
+      screens: {
+        'phone': '450px',
       },
     },
   },

@@ -2,48 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Inter';
-  src: url('./assets/fonts/Inter_18pt-Regular.ttf') format('truetype');
-  font-weight: 400;
-}
-@font-face {
-  font-family: 'Inter';
-  src: url('./assets/fonts/Inter_18pt-Medium.ttf') format('truetype'),
-       url('./assets/fonts/Inter_18pt-SemiBold.ttf') format('truetype'),
-       url('./assets/fonts/Inter_18pt-Bold.ttf') format('truetype'),
-       url('./assets/fonts/Inter_18pt-Light.ttf') format('truetype');
-  font-weight: 300 700;
-}
+$font-names: "Light", "Regular", "Medium", "SemiBold", "Bold";
 
-@font-face {
-  font-family: 'Manrope';
-  src: url('./assets/fonts/Manrope-Regular.ttf') format('truetype');
-  font-weight: 400;
-}
-@font-face {
-  font-family: 'Manrope';
-  src: url('./assets/fonts/Manrope-Medium.ttf') format('truetype'),
-       url('./assets/fonts/Manrope-SemiBold.ttf') format('truetype'),
-       url('./assets/fonts/Manrope-Bold.ttf') format('truetype');
-  font-weight: 500 700;
+@each $name in $font-names {
+  @font-face {
+    font-family: "Inter-#{$name}";
+    src: url("./assets/fonts/Inter_18pt-#{$name}.ttf") format("truetype");
+  }
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-/* Telegram headerini yashirish yoki moslashtirish uchun */
-#telegram-web-app-header {
-  display: none !important; /* Agar Telegram headerini butunlay yashirmoqchi bo'lsangiz */
-}
-
-/* Yoki headerni dizayn bilan moslashtirish */
-@media (max-width: 450px) {
-  .min-h-screen {
-    height: 100vh;
-    overflow-y: auto;
-  }
+  font-family: "Inter-Regular";
 }
