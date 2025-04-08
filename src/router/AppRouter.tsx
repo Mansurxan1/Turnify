@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import Profile from "../pages/Profile";
 import Menu from "../components/Menu";
 import Home from "../pages/Home";
-import Terms from "../components/Terms";
+import Terms from "../pages/Terms";
 import Loader from "../components/Loader";
-import Privacy from "../components/Privacy";
+import Privacy from "../pages/Privacy";
 import LoginLanguageModal from "../components/LangauageModal";
 
 const RouterContent: React.FC = () => {
@@ -24,7 +24,6 @@ const RouterContent: React.FC = () => {
 
   return (
     <>
-      <Menu />
       {isInitialLoad && !hideLoader && <Loader />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -32,7 +31,9 @@ const RouterContent: React.FC = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy/>} />
         <Route path="/language" element={<LoginLanguageModal />} />
+        <Route path="*" element={<Home />} />
       </Routes>
+      <Menu />
     </>
   );
 };

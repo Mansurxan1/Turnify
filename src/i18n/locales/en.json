@@ -1,5 +1,5 @@
 {
-    "slogan": "Step onto the path – Stay on track!",
+    "slogan": "Take the step – stay on track!",
     "terms": "Terms of Use",
     "privacy": "Privacy Policy",
     "copyright": "© 2025 Turnify. All rights reserved",
@@ -7,5 +7,21 @@
     "uz": "Uzbek",
     "ru": "Russian",
     "en": "English",
-    "next": "Next"
+    "next": "Next",
+    "nextt": "Next", 
+    "enter_details": "Enter your first and last name",
+    "name_instructions": "Please write your full name correctly without errors.",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "username_rules": "Only letters, numbers, and '-' character are allowed.",
+    "username_error": "Please do not place '-' at the beginning or end of the username.",
+    "done": "Done",
+    "enter_username": "ENTER YOUR USERNAME",
+    "username_instructions": "Spaces, emojis, and offensive words are not allowed.",
+    "select_timezone": "SELECT YOUR TIMEZONE",
+    "timezone_instructions": "To receive tasks at the correct time, enter your country or city name and select the appropriate timezone.",
+    "country_or_city": "Country or city name...",
+    "success": "Success",
+    "registered": "You have successfully registered!",
+    "no_results": "No results found"
 }

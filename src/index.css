@@ -2,15 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-$font-names: "Light", "Regular", "Medium", "SemiBold", "Bold";
-
-@each $name in $font-names {
-  @font-face {
-    font-family: "Inter-#{$name}";
-    src: url("./assets/fonts/Inter_18pt-#{$name}.ttf") format("truetype");
-  }
-}
-
 body {
-  font-family: "Inter-Regular";
+  font-family: "Inter";
 }
