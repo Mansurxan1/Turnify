@@ -34,7 +34,7 @@ const Loader: React.FC = () => {
         {showText ? (
           <h3 className={`text-lg px-2 font-bold ${styles.textColor} text-center`}>{t("slogan")}</h3>
         ) : (
-          <img src={currentLogo} alt="Turnify Logo" className="h-24 w-auto object-cover mb-4" />
+          <img src={currentLogo} alt="Turnify Logo" className="w-auto object-cover mb-4" />
         )}
       </div>
       <div className={`fixed bottom-8 px-4 ${styles.footerTextColor} text-sm w-full text-center`}>
