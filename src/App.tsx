@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setTheme, setUserData } from "./store/telegramSlice"; 
 import AppRouter from "./router/AppRouter";
+import "./assets/font.scss";
 
 function App() {
   const dispatch = useDispatch();
@@ -17,7 +18,6 @@ function App() {
           const initialTheme = webApp.colorScheme || "light";
           dispatch(setTheme(initialTheme));
 
-          // Foydalanuvchi ma'lumotlarini olish 
           const initData = webApp.initDataUnsafe?.user;
           if (initData) {
             dispatch(

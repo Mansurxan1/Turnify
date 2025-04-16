@@ -5,7 +5,7 @@ declare global {
         ready: () => void;
         expand: () => void;
         close: () => void;
-        colorScheme: "light" | "dark";
+        colorScheme: "dark" | "light";
         onEvent: (event: string, callback: () => void) => void;
         initDataUnsafe?: {
           user?: {
