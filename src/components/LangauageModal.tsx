@@ -21,18 +21,26 @@ const countries: string[] = [
 const LoginLanguageModal: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [selectedLang, setSelectedLang] = useState<string | null>(localStorage.getItem("language"));
+  const [selectedLang, setSelectedLang] = useState<string | null>(
+    localStorage.getItem("language")
+  );
   const theme = useSelector((state: RootState) => state.telegram.theme) || "light";
   const styles = getThemeStyles(theme);
-  const telegramUsername = useSelector((state: RootState) => state.telegram.username);
+  const telegramUsername = useSelector(
+    (state: RootState) => state.telegram.username
+  );
 
+  const [showGenderModal, setShowGenderModal] = useState<boolean>(false);
   const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
   const [showUsernameModal, setShowUsernameModal] = useState<boolean>(false);
   const [showTimeZoneModal, setShowTimeZoneModal] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [username, setUsername] = useState<string>(telegramUsername ? `@${telegramUsername}` : "");
+  const [gender, setGender] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>(
+    telegramUsername ? `@${telegramUsername}` : ""
+  );
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(selectedLang ? 33 : 0);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -47,7 +55,10 @@ const LoginLanguageModal: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -57,7 +68,8 @@ const LoginLanguageModal: React.FC = () => {
 
   useEffect(() => {
     const detectKeyboard = () => {
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const viewportHeight =
+        window.visualViewport?.height || window.innerHeight;
       const windowHeight = window.innerHeight;
       setIsKeyboardVisible(viewportHeight < windowHeight * 0.8);
     };
@@ -71,18 +83,31 @@ const LoginLanguageModal: React.FC = () => {
 
   useEffect(() => {
     if (!selectedLang) setProgress(0);
-    else if (showDetailsModal) {
-      if (firstName.trim() && !lastName.trim()) setProgress(49.5);
-      else if (firstName.trim() && lastName.trim()) setProgress(66);
-      else setProgress(33);
+    else if (showGenderModal) {
+      setProgress(gender ? 50 : 40);
+    } else if (showDetailsModal) {
+      if (firstName.trim() && !lastName.trim()) setProgress(55);
+      else if (firstName.trim() && lastName.trim()) setProgress(70);
+      else setProgress(50);
     } else if (showUsernameModal) {
-      setProgress(username.trim() && username !== "@" ? 75 : 66);
+      setProgress(username.trim() && username !== "@" ? 85 : 70);
     } else if (showTimeZoneModal) {
-      setProgress(selectedCountry ? 100 : 75);
+      setProgress(selectedCountry ? 100 : 85);
     } else {
       setProgress(33);
     }
-  }, [selectedLang, firstName, lastName, username, showDetailsModal, showUsernameModal, showTimeZoneModal, selectedCountry]);
+  }, [
+    selectedLang,
+    showGenderModal,
+    gender,
+    showDetailsModal,
+    firstName,
+    lastName,
+    username,
+    showUsernameModal,
+    showTimeZoneModal,
+    selectedCountry,
+  ]);
 
   const handleLanguageSelect = (lang: string) => {
     setSelectedLang(lang);
@@ -92,38 +117,41 @@ const LoginLanguageModal: React.FC = () => {
 
   const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
+    if (/^[a-zA-Zа-яА-ЯёЁ]*$/.test(value)) { // Faqat lotin va kirill harflari
       setFirstName(value);
     }
   };
 
   const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (/^[^\d\s!@#$%^&*()_+=[\]{}|;:'",.<>?~`]*$/.test(value)) {
+    if (/^[a-zA-Zа-яА-ЯёЁ]*$/.test(value)) { // Faqat lotin va kirill harflari
       setLastName(value);
     }
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    let value = e.target.value;
+    
+    // Agar telegramUsername mavjud bo‘lsa, faqat o‘zgartirishlarni qabul qilamiz
     if (telegramUsername) {
-      if (!value.startsWith("@")) {
-        setUsername(username || "@");
-      } else {
-        const afterAt = value.slice(1);
-        if (/^[a-zA-Z0-9-]*$/.test(afterAt)) {
-          setUsername(`@${afterAt}`);
-          if (afterAt.startsWith("-") || afterAt.endsWith("-")) {
-            setUsernameError(t("username_error"));
-          } else {
-            setUsernameError(null);
-          }
+      const afterAt = value.startsWith("@") ? value.slice(1) : value;
+      if (/^[a-zA-Z0-9-]*$/.test(afterAt)) {
+        setUsername(`@${afterAt}`);
+        if (afterAt.startsWith("-") || afterAt.endsWith("-")) {
+          setUsernameError(t("username_error"));
+        } else {
+          setUsernameError(null);
         }
       }
     } else {
-      if (/^[@a-zA-Z0-9-]*$/.test(value)) {
+      // Agar telegramUsername bo‘lmasa, @ belgisini avtomatik qo‘shamiz
+      if (!value.startsWith("@")) {
+        value = `@${value}`;
+      }
+      const afterAt = value.slice(1);
+      if (/^[a-zA-Z0-9-]*$/.test(afterAt)) {
         setUsername(value);
-        if (value.startsWith("-") || value.endsWith("-")) {
+        if (afterAt.startsWith("-") || afterAt.endsWith("-")) {
           setUsernameError(t("username_error"));
         } else {
           setUsernameError(null);
@@ -162,15 +190,23 @@ const LoginLanguageModal: React.FC = () => {
     transition: "background-image 0.3s ease",
   };
 
-  const buttonPositionClass = isKeyboardVisible ? "relative mt-8 mb-4" : "fixed bottom-8 left-7 right-7";
+  const buttonPositionClass = isKeyboardVisible
+    ? "relative mt-8 mb-4"
+    : "fixed bottom-8 left-7 right-7";
 
   return (
     <div className={`${styles.overlayBg}`}>
-      <div className={`flex pt-5 flex-col items-center justify-center mx-auto max-w-[450px] min-h-screen w-full ${styles.bgColor} px-8 pb-20`}>
+      <div
+        className={`flex pt-5 flex-col items-center justify-center mx-auto max-w-[450px] min-h-screen w-full ${styles.bgColor} px-8 pb-20`}
+      >
         <div className="w-full absolute pt-20 phone:pt-5 mx-auto max-w-[450px] top-8 flex justify-start">
           <div style={progressBarStyle}></div>
         </div>
-        <h2 className={`text-3xl w-60 text-center font-inter font-bold ${styles.textColor} mb-6`}>{t("language")}</h2>
+        <h2
+          className={`text-3xl w-60 text-center font-inter font-bold ${styles.textColor} mb-6`}
+        >
+          {t("language")}
+        </h2>
         <div className="w-full max-w-[390px] space-y-3">
           {["uz", "en", "ru"].map((lang) => (
             <button
@@ -189,34 +225,127 @@ const LoginLanguageModal: React.FC = () => {
             </button>
           ))}
           <button
-            onClick={() => selectedLang && setShowDetailsModal(true)}
+            onClick={() => selectedLang && setShowGenderModal(true)}
             disabled={!selectedLang}
             className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
               !!selectedLang
-            )} ${!selectedLang ? `cursor-not-allowed ${styles.textColor}` : styles.activeButtonTextColor} ${buttonPositionClass}`}
+            )} ${
+              !selectedLang
+                ? `cursor-not-allowed ${styles.textColor}`
+                : styles.activeButtonTextColor
+            } ${buttonPositionClass}`}
           >
             {t("nextt")}
           </button>
         </div>
 
-        {showDetailsModal && (
+        {showGenderModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
-            <div className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${styles.bgColor} justify-start overflow-y-auto`}>
+            <div
+              className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${styles.bgColor} justify-start overflow-y-auto`}
+            >
               <div className="max-w-[450px] w-full sticky top-0 flex flex-col z-10 bg-inherit">
                 <button
                   onClick={() => {
-                    setShowDetailsModal(false);
+                    setShowGenderModal(false);
+                    setGender(null);
                     setProgress(33);
                   }}
                   className={`${styles.textColor} text-[24px] px-4 pt-20 phone:pt-5 self-start`}
                 >
-                  <ChevronDown className="h-6 w-6 transform rotate-90" strokeWidth={3} />
+                  <ChevronDown
+                    className="h-6 w-6 transform rotate-90"
+                    strokeWidth={3}
+                  />
                 </button>
                 <div style={progressBarStyle} className="mt-2"></div>
               </div>
               <div className="px-8 pb-24">
-                <h2 className={`mt-10 text-xl uppercase font-bold ${styles.textColor} leading-tight`}>{t("enter_details")}</h2>
-                <p className={`mt-2 text-[#768C9E] text-sm leading-relaxed`}>{t("name_instructions")}</p>
+                <h2
+                  className={`mt-10 text-xl uppercase font-bold ${styles.textColor} leading-tight`}
+                >
+                  {t("select_gender")}
+                </h2>
+                <p className={`mt-2 text-[#768C9E] text-sm leading-relaxed`}>
+                  {t("gender_instructions")} {/* To‘g‘ri tarjima kaliti */}
+                </p>
+                <div className="flex flex-col">
+                  <div className="flex flex-col gap-5 mt-4">
+                    <button
+                      onClick={() => setGender("female")}
+                      className={`w-full p-3 rounded-lg font-medium ${
+                        gender === "female"
+                          ? "bg-[#5EB5F7] text-white"
+                          : `${styles.controlBg} text-[#768C9E]`
+                      }`}
+                    >
+                      {t("female")}
+                    </button>
+                    <button
+                      onClick={() => setGender("male")}
+                      className={`w-full p-3 rounded-lg font-medium ${
+                        gender === "male"
+                          ? "bg-[#5EB5F7] text-white"
+                          : `${styles.controlBg} text-[#768C9E]`
+                      }`}
+                    >
+                      {t("male")}
+                    </button>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    if (gender) {
+                      setShowGenderModal(false);
+                      setShowDetailsModal(true);
+                    }
+                  }}
+                  disabled={!gender}
+                  className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
+                    !!gender
+                  )} ${
+                    !gender
+                      ? `cursor-not-allowed ${styles.textColor}`
+                      : styles.activeButtonTextColor
+                  } ${buttonPositionClass}`}
+                >
+                  {t("next")}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showDetailsModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
+            <div
+              className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${styles.bgColor} justify-start overflow-y-auto`}
+            >
+              <div className="max-w-[450px] w-full sticky top-0 flex flex-col z-10 bg-inherit">
+                <button
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    setShowGenderModal(true);
+                    setProgress(50);
+                  }}
+                  className={`${styles.textColor} text-[24px] px-4 pt-20 phone:pt-5 self-start`}
+                >
+                  <ChevronDown
+                    className="h-6 w-6 transform rotate-90"
+                    strokeWidth={3}
+                  />
+                </button>
+                <div style={progressBarStyle} className="mt-2"></div>
+              </div>
+              <div className="px-8 pb-24">
+                <h2
+                  className={`mt-10 text-xl uppercase font-bold ${styles.textColor} leading-tight`}
+                >
+                  {t("enter_details")}
+                </h2>
+                <p className={`mt-2 text-[#768C9E] text-sm leading-relaxed`}>
+                  {t("name_instructions")}
+                </p>
                 <div className="flex flex-col space-y-4">
                   <input
                     value={firstName}
@@ -241,7 +370,11 @@ const LoginLanguageModal: React.FC = () => {
                   disabled={!firstName.trim() || !lastName.trim()}
                   className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
                     !!(firstName.trim() && lastName.trim())
-                  )} ${!firstName.trim() || !lastName.trim() ? `cursor-not-allowed ${styles.textColor}` : styles.activeButtonTextColor} ${buttonPositionClass}`}
+                  )} ${
+                    !firstName.trim() || !lastName.trim()
+                      ? `cursor-not-allowed ${styles.textColor}`
+                      : styles.activeButtonTextColor
+                  } ${buttonPositionClass}`}
                 >
                   {t("next")}
                 </button>
@@ -252,42 +385,81 @@ const LoginLanguageModal: React.FC = () => {
 
         {showUsernameModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
-            <div className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${styles.bgColor} justify-start overflow-y-auto`}>
+            <div
+              className={`h-screen max-w-[450px] w-full mx-auto flex flex-col ${styles.bgColor} justify-start overflow-y-auto`}
+            >
               <div className="max-w-[450px] w-full sticky top-0 flex flex-col z-10 bg-inherit">
                 <button
                   onClick={() => {
                     setShowUsernameModal(false);
                     setShowDetailsModal(true);
-                    setProgress(66);
+                    setProgress(70);
                   }}
                   className={`${styles.textColor} text-[24px] px-4 pt-20 phone:pt-5 self-start`}
                 >
-                  <ChevronDown className="h-6 w-6 transform rotate-90" strokeWidth={3} />
+                  <ChevronDown
+                    className="h-6 w-6 transform rotate-90"
+                    strokeWidth={3}
+                  />
                 </button>
                 <div style={progressBarStyle} className="mt-2"></div>
               </div>
               <div className="px-8 pb-24">
-                <h2 className={`mt-10 text-xl font-bold ${styles.textColor} leading-tight`}>{t("enter_username")}</h2>
-                <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("username_instructions")}</p>
+                <h2
+                  className={`mt-10 text-xl font-bold ${styles.textColor} leading-tight`}
+                >
+                  {t("enter_username")}
+                </h2>
+                <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>
+                  {t("username_instructions")}
+                </p>
                 <input
                   value={username}
                   onChange={handleUsernameChange}
                   placeholder="@username"
                   className={`w-full max-w-[390px] mt-4 p-3 ${styles.controlBg} rounded-xl ${styles.inputTextColor} text-[16px] focus:outline-none border ${styles.borderColor}`}
                 />
-                {usernameError && <p className="mt-2 text-[12px] text-red-500 text-center">{usernameError}</p>}
-                <p className="mt-2 text-[12px] text-[#768C9E] text-center">{t("username_rules")}</p>
+                {usernameError && (
+                  <p className="mt-2 text-[12px] text-red-500 text-center">
+                    {usernameError}
+                  </p>
+                )}
+                <p className="mt-2 text-[12px] text-[#768C9E] text-center">
+                  {t("username_rules")}
+                </p>
                 <button
                   onClick={() => {
-                    if (username.trim() && username !== "@" && !username.startsWith("-") && !username.endsWith("-")) {
+                    if (
+                      username.trim() &&
+                      username !== "@" &&
+                      !username.startsWith("-") &&
+                      !username.endsWith("-")
+                    ) {
                       setShowUsernameModal(false);
                       setShowTimeZoneModal(true);
                     }
                   }}
-                  disabled={!username.trim() || username === "@" || username.startsWith("-") || username.endsWith("-")}
+                  disabled={
+                    !username.trim() ||
+                    username === "@" ||
+                    username.startsWith("-") ||
+                    username.endsWith("-")
+                  }
                   className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
-                    !!(username.trim() && username !== "@" && !username.startsWith("-") && !username.endsWith("-"))
-                  )} ${!username.trim() || username === "@" || username.startsWith("-") || username.endsWith("-") ? `cursor-not-allowed ${styles.textColor}` : styles.activeButtonTextColor} ${buttonPositionClass}`}
+                    !!(
+                      username.trim() &&
+                      username !== "@" &&
+                      !username.startsWith("-") &&
+                      !username.endsWith("-")
+                    )
+                  )} ${
+                    !username.trim() ||
+                    username === "@" ||
+                    username.startsWith("-") ||
+                    username.endsWith("-")
+                      ? `cursor-not-allowed ${styles.textColor}`
+                      : styles.activeButtonTextColor
+                  } ${buttonPositionClass}`}
                 >
                   {t("next")}
                 </button>
@@ -298,24 +470,38 @@ const LoginLanguageModal: React.FC = () => {
 
         {showTimeZoneModal && (
           <div className="fixed inset-0 flex items-center justify-center z-50 w-full">
-            <div className={`h-screen max-w-[450px] w-full mx-auto flex flex-col items-center justify-start ${styles.bgColor} overflow-y-auto`}>
+            <div
+              className={`h-screen max-w-[450px] w-full mx-auto flex flex-col items-center justify-start ${styles.bgColor} overflow-y-auto`}
+            >
               <div className="w-full max-w-[450px] sticky top-0 flex flex-col z-10 bg-inherit">
                 <button
                   onClick={() => {
                     setShowTimeZoneModal(false);
                     setShowUsernameModal(true);
-                    setProgress(75);
+                    setProgress(85);
                   }}
                   className={`${styles.textColor} px-4 text-[24px] pt-20 phone:pt-5 self-start`}
                 >
-                  <ChevronDown className="h-6 w-6 transform rotate-90" strokeWidth={3} />
+                  <ChevronDown
+                    className="h-6 w-6 transform rotate-90"
+                    strokeWidth={3}
+                  />
                 </button>
                 <div style={progressBarStyle} className="mt-2"></div>
               </div>
               <div className="px-8 pb-24 w-full">
-                <h2 className={`mt-10 text-xl font-bold ${styles.textColor} leading-tight`}>{t("select_timezone")}</h2>
-                <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>{t("timezone_instructions")}</p>
-                <div className="w-full max-w-[420px] mt-6 relative" ref={dropdownRef}>
+                <h2
+                  className={`mt-10 text-xl font-bold ${styles.textColor} leading-tight`}
+                >
+                  {t("select_timezone")}
+                </h2>
+                <p className={`mt-4 text-[#768C9E] text-sm leading-relaxed`}>
+                  {t("timezone_instructions")}
+                </p>
+                <div
+                  className="w-full max-w-[420px] mt-6 relative"
+                  ref={dropdownRef}
+                >
                   <div className="relative">
                     <input
                       value={searchTerm}
@@ -332,7 +518,11 @@ const LoginLanguageModal: React.FC = () => {
                   </div>
                   {isDropdownOpen && (
                     <div
-                      className={`${isKeyboardVisible ? "absolute bottom-full mb-1" : "absolute top-full mt-1"} w-full ${styles.controlBg} rounded-lg max-h-[200px] overflow-y-auto z-20 ${styles.dropdownShadow}`}
+                      className={`${
+                        isKeyboardVisible
+                          ? "absolute bottom-full mb-1"
+                          : "absolute top-full mt-1"
+                      } w-full ${styles.controlBg} rounded-lg max-h-[200px] overflow-y-auto z-20 ${styles.dropdownShadow}`}
                     >
                       {filteredCountries.length > 0 ? (
                         filteredCountries.map((country) => (
@@ -341,7 +531,11 @@ const LoginLanguageModal: React.FC = () => {
                             className={`p-3 cursor-pointer ${
                               selectedCountry === country
                                 ? `${styles.timeBg} text-white`
-                                : `${theme === "light" ? "hover:bg-[#2B5278] hover:text-white" : "hover:bg-[#5EB5F7] hover:text-white"} text-[#768C9E]`
+                                : `${
+                                    theme === "light"
+                                      ? "hover:bg-[#2B5278] hover:text-white"
+                                      : "hover:bg-[#5EB5F7] hover:text-white"
+                                  } text-[#768C9E]`
                             }`}
                             onClick={() => handleCountrySelect(country)}
                           >
@@ -349,7 +543,9 @@ const LoginLanguageModal: React.FC = () => {
                           </div>
                         ))
                       ) : (
-                        <div className="p-3 text-center text-gray-500">{t("no_results")}</div>
+                        <div className="p-3 text-center text-gray-500">
+                          {t("no_results")}
+                        </div>
                       )}
                     </div>
                   )}
@@ -368,7 +564,11 @@ const LoginLanguageModal: React.FC = () => {
                   disabled={!selectedCountry}
                   className={`max-w-[385px] mx-auto p-3 rounded-xl font-semibold transition-colors ${buttonBackground(
                     !!selectedCountry
-                  )} ${!selectedCountry ? `cursor-not-allowed ${styles.textColor}` : styles.activeButtonTextColor} ${buttonPositionClass}`}
+                  )} ${
+                    !selectedCountry
+                      ? `cursor-not-allowed ${styles.textColor}`
+                      : styles.activeButtonTextColor
+                  } ${buttonPositionClass}`}
                 >
                   {t("done")}
                 </button>
@@ -378,13 +578,19 @@ const LoginLanguageModal: React.FC = () => {
         )}
 
         {showSuccessModal && (
-          <div className={`fixed inset-0 flex flex-col items-center justify-center ${styles.bgColor} px-4 z-50 w-full`}>
+          <div
+            className={`fixed inset-0 flex flex-col items-center justify-center ${styles.bgColor} px-4 z-50 w-full`}
+          >
             <div className="flex flex-col items-center justify-center">
               <div className="w-16 h-16 bg-gradient-to-r from-[#0061FF] to-[#52DAFF] rounded-lg flex items-center justify-center mb-4 transform rotate-12">
                 <Check className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-[#0061FF] text-2xl font-bold text-center mb-2">{t("success")}</h2>
-              <p className="text-[#0061FF] text-lg text-center">{t("registered")}</p>
+              <h2 className="text-[#0061FF] text-2xl font-bold text-center mb-2">
+                {t("success")}
+              </h2>
+              <p className="text-[#0061FF] text-lg text-center">
+                {t("registered")}
+              </p>
             </div>
           </div>
         )}
