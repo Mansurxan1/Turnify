@@ -11,11 +11,14 @@ interface ThemeConfig {
   inputTextColor: string; // Input ichidagi text rangi
   borderColor: string; // border ranglari
   dropdownShadow: string; // dropdownlar uchun shadow
+  searchInputBg: string; // search input bg rangi
+  searchHeader: string // search header rangi
+  searchCardBg: string // search card bg rangi
 }
 
 const themes: Record<Theme, ThemeConfig> = {
   light: {
-    textColor: "text-black", 
+    textColor: "text-black",
     bgColor: "bg-[#F1F1F1]",
     overlayBg: "bg-gray-900 bg-opacity-50",
     footerTextColor: "text-gray-500",
@@ -25,6 +28,9 @@ const themes: Record<Theme, ThemeConfig> = {
     inputTextColor: "text-[#4B5563]",
     borderColor: "border-[#BFC8CF]",
     dropdownShadow: "shadow-[0px_10px_15px_-3px_#00000026]",
+    searchInputBg: "bg-[#FFFFFF]",
+    searchHeader: "bg-[#F1F1F1]",
+    searchCardBg: "bg-[#FFFFFF]"
   },
   dark: {
     textColor: "text-white",
@@ -37,6 +43,9 @@ const themes: Record<Theme, ThemeConfig> = {
     inputTextColor: "text-[#D1D5DB]",
     borderColor: "border-[#768C9E]",
     dropdownShadow: "shadow-[0px_10px_15px_-3px_#00000033]",
+    searchInputBg: "bg-[#242F3D]",
+    searchHeader: "bg-[#17212B]",
+    searchCardBg: "bg-[#182533]"
   },
 };
 
