@@ -1,4 +1,4 @@
-// src/i18n/i18n.ts
+  // src/i18n/i18n.ts
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import uz from "./locales/uz.json";
@@ -17,10 +17,10 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: savedLanguage, 
-    fallbackLng: "en", 
+    lng: savedLanguage,
+    fallbackLng: "en",
     interpolation: {
-      escapeValue: false, 
+      escapeValue: false,
     },
   });
 

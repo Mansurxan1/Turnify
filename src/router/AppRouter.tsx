@@ -7,15 +7,16 @@ import Terms from "../pages/Terms";
 import Loader from "../components/Loader";
 import Privacy from "../pages/Privacy";
 import LoginLanguageModal from "../components/LangauageModal";
+import Search from "../pages/Search";
 
 const RouterContent: React.FC = () => {
-  const location = useLocation(); 
+  const location = useLocation();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoad(false);
-    }, 5000); 
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -31,7 +32,7 @@ const RouterContent: React.FC = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy/>} />
         <Route path="/language" element={<LoginLanguageModal />} />
-        <Route path="*" element={<Home />} />
+        <Route path="/search" element={<Search/>} />
       </Routes>
       <Menu />
     </>

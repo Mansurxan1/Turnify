@@ -10,6 +10,9 @@ export default {
       screens: {
         'phone': '450px',
       },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(44.57deg, #0061FF 0.37%, #52DAFF 99.63%)',
+      },
     },
   },
   plugins: [],
