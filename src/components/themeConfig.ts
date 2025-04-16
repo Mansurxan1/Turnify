@@ -36,7 +36,7 @@ const themes: Record<Theme, ThemeConfig> = {
     activeButtonTextColor: "text-white",
     inputTextColor: "text-[#D1D5DB]",
     borderColor: "border-[#768C9E]",
-    dropdownShadow: "shadow-[0px_10px_15px_-3px_#00000033]",
+    dropdownShadow: "shadow-[0px_10px_15px_-3px_#12121233",
   },
 };
 
