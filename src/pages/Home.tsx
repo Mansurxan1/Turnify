@@ -42,6 +42,10 @@ const Home = () => {
           >
             Til
           </Link>
+          <Link to="/search" 
+            className="px-6 py-3 mt-4 rounded-lg font-medium text-lg transition-all duration-300 bg-blue-500 hover:bg-blue-600 text-white"
+          >Search
+          </Link>
         </div>
       </div>
     </div>

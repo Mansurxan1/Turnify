@@ -6,7 +6,7 @@ import Home from "../pages/Home";
 import Terms from "../pages/Terms";
 import Loader from "../components/Loader";
 import Privacy from "../pages/Privacy";
-import LoginLanguageModal from "../components/LangauageModal";
+import LoginLanguageModal from "../pages/LangauageModal";
 import Search from "../pages/Search";
 
 const RouterContent: React.FC = () => {
