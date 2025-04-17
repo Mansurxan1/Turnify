@@ -8,11 +8,11 @@ const Search = () => {
     const styles = getThemeStyles(theme);
 
   return (
-    <div className={`${theme === "dark" ? "bg-[#182533] text-white" : "bg-[#D2D2D2] text-black"} h-screen max-w-[450px] mx-auto pt-[16px]`}>
+    <div className={`${theme === "dark" ? "bg-[#0E1621] text-white" : "bg-[#D2D2D2] text-black"} h-screen max-w-[450px] mx-auto min-w-[450px]:pt-4`}>
         <form action="" className={`px-5 py-4 w-full shadow-[0px_0.33px_0.33px_0px_rgb(118,140,158,0.25)] ${styles.searchHeader}`}>
             <div className={`rounded-[8px] flex items-center px-3 ${styles.searchInputBg}`}>
                 <span>🔍</span>
-                <input type="text" className='w-full py-2 px-2 outline-none rounded-full font-inter text-sm font-normal tracking-[0.2px] leading-5 text-[#768C9E] placeholder:font-inter' placeholder='Challenge va foydalanuvchilarni izlash'/>
+                <input type="text" className={`w-full py-2 px-2 outline-none rounded-full font-inter text-sm font-normal tracking-[0.2px] leading-5 text-[#768C9E] placeholder:font-inter ${styles.searchInputBg}`} placeholder='Challenge va foydalanuvchilarni izlash'/>
                 <button>&#8652;</button>
             </div>
         </form>
