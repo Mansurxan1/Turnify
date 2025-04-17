@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        inter: ["Inter"],
+        inter: ["Inter, sans-serif"],
       },
       screens: {
         'phone': '450px',
